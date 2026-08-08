@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sinovox 声音工坊 · Manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&amp;family=Noto+Serif+SC:wght@600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root { --paper:#f3ede2; --surface:#fffdf8; --ink:#191713; --muted:#6d6253; --red:#a51d1f; --jade:#285746; --line:#d8cbb9; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); font:16px/1.65 "Noto Sans SC","PingFang SC",sans-serif; background:var(--paper); }
+    header { color:#f7ead3; background:#151713; border-bottom:4px solid var(--red); }
+    .header-inner, main { width:min(920px,calc(100% - 32px)); margin:auto; }
+    .header-inner { padding:28px 0; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    h1,h2 { font-family:"Noto Serif SC","Songti SC",serif; }
+    h1 { margin:0; color:#efd5a5; font-size:clamp(28px,5vw,44px); }
+    header p { margin:4px 0 0; color:#bdb29f; }
+    header a { color:#fff; text-decoration:none; border:1px solid #665d50; padding:8px 12px; }
+    main { padding:32px 0 64px; }
+    nav { display:flex; flex-wrap:wrap; gap:8px 18px; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--line); }
+    nav a { color:var(--jade); font-weight:700; text-decoration:none; }
+    section { margin:0 0 18px; padding:24px 28px; background:var(--surface); border:1px solid var(--line); box-shadow:0 8px 24px rgba(45,34,22,.06); }
+    h2 { margin:0 0 12px; color:#781315; font-size:24px; }
+    table { width:100%; border-collapse:collapse; margin:16px 0; }
+    th,td { padding:10px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    th { color:#781315; background:#f6eee2; }
+    code,pre { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    code { padding:.12em .35em; background:#eee5d8; }
+    pre { overflow:auto; padding:16px; color:#b6dcc3; background:#111914; border-left:3px solid var(--jade); }
+    .note { padding:14px 16px; background:#f2eadc; border-left:3px solid var(--red); }
+    @media(max-width:600px){ .header-inner{align-items:flex-start;flex-direction:column}.header-inner,main{width:min(100% - 20px,920px)}section{padding:20px 16px}table{font-size:14px} }
+  </style>
+</head>
+<body>
+  <header><div class="header-inner"><div><h1>Sinovox 声音工坊</h1><p>Kraftor browser control surface · GUI v1.2</p></div><a href="index.html">Back to designer</a></div></header>
+  <main>
+    <nav><a href="#connect">Connect</a><a href="#text">Text</a><a href="#pinyin">Pinyin helper</a><a href="#voice">Voice</a><a href="#midi">MIDI</a><a href="#banks">RAM / FRAM</a><a href="#commands">Commands</a></nav>
+    <section id="connect"><h2>Connect Kraftor</h2><ol><li>Use Chrome or Edge.</li><li>Click <strong>Select port</strong> and choose the Kraftor USB serial device.</li><li>The designer sends <code>!INFO?</code> and shows the Sinovox model, firmware and chip ID.</li><li>Click <strong>Connect MIDI</strong>, choose the Kraftor MIDI output and select the channel set by the DIP switches.</li></ol><p class="note">Web Serial carries text and sentence-bank commands. Web MIDI carries voice changes and note triggers. Use Identify when several Kraftor units are connected.</p></section>
+    <section id="text"><h2>Chinese/Pinyin and English text</h2><p>Send ASCII Pinyin with tone numbers or English text. The firmware adds the active Sinovox language, pitch, speed, speaker and volume tags automatically.</p><pre>ni3 hao3
+suo3you3xi4tong3dou1zhun3bei4jiu4xu4
+hello from sinovox</pre><p>The maximum stored sentence is <strong>200 ASCII bytes</strong>. If the module is speaking, the board replies <code>!ERR busy</code>; use <code>!STOP</code> to interrupt.</p></section>
+    <section id="pinyin"><h2>English → Sinovox Pinyin helper</h2><ol><li>Enter English and click <strong>Translate</strong>. Supported desktop Chrome versions translate locally to Simplified Chinese; the first use may download a language pack.</li><li>Review the Simplified Chinese.</li><li>Click <strong>Make numbered Pinyin</strong>, then <strong>Use in speech box</strong>.</li></ol><pre>all systems are ready&#10;所有系统都准备就绪&#10;suo3you3xi4tong3dou1zhun3bei4jiu4xu4</pre><p>If automatic translation is unavailable, click <strong>Google fallback</strong>, then paste only the Simplified Chinese result into step 2. The helper removes spaces and punctuation, lowercases the result and converts <code>ü</code> to ASCII <code>v</code>. Do not add <code>[i1]</code>; Kraftor adds the language tag.</p><p class="note">Machine translation and automatic Pinyin can be ambiguous. Review names and polyphonic Chinese characters before saving important phrases.</p></section>
+    <section id="voice"><h2>Voice controls</h2><table><thead><tr><th>Control</th><th>Range</th><th>MIDI</th><th>Sinovox tag</th></tr></thead><tbody><tr><td>Voice</td><td>index 0–5 → speaker 3, 51, 52, 53, 54, 55</td><td>CC 1</td><td><code>[m]</code></td></tr><tr><td>Pitch</td><td>0–10</td><td>Pitch bend</td><td><code>[t]</code></td></tr><tr><td>Speed</td><td>0–10</td><td>CC 2</td><td><code>[s]</code></td></tr><tr><td>Volume</td><td>0–10</td><td>CC 3</td><td><code>[v]</code></td></tr><tr><td>Language</td><td>0 English, 1 Chinese/Pinyin</td><td>CC 4</td><td><code>[i]</code></td></tr></tbody></table><p>Every change is stored locally. When MIDI connects, the complete current voice is transmitted. When serial is connected, changes are synchronized as:</p><pre>!VOICE language pitch speed voice volume</pre><p>Example default: <code>!VOICE 1 5 5 0 10</code>.</p></section>
+    <section id="midi"><h2>MIDI and DIP switches</h2><p>DIP1–DIP4 are active-low binary switches with weights 8, 4, 2 and 1. All OFF selects Omni; values 1–15 select that MIDI channel. Reset Kraftor after changing the switches.</p><table><thead><tr><th>MIDI input</th><th>Result</th></tr></thead><tbody><tr><td>Notes 28–47</td><td>Play RAM slots 0–19</td></tr><tr><td>Notes 48–127</td><td>Play FRAM slots 0–79</td></tr><tr><td>CC 1</td><td>Select one of six voices</td></tr><tr><td>CC 2</td><td>Speed</td></tr><tr><td>CC 3</td><td>Volume</td></tr><tr><td>CC 4</td><td>Language</td></tr><tr><td>Pitch bend</td><td>Pitch</td></tr></tbody></table></section>
+    <section id="banks"><h2>RAM and FRAM sentences</h2><ul><li><strong>RAM:</strong> 20 volatile slots, cleared at reset, MIDI notes 28–47.</li><li><strong>FRAM:</strong> up to 100 persistent RC256 slots. MIDI notes 48–127 trigger slots 0–79; slots 80–99 remain serial/GUI only.</li></ul><p>Use Reload, Save all changed, per-slot Play/Erase or bulk paste. The printable reference sheet is generated from the current form.</p></section>
+    <section id="commands"><h2>Useful serial commands</h2><pre>!INFO?
+!VOICE?
+!VOICE 1 5 5 0 10
+!STOP
+!SET R 0 ni3 hao3
+!GET R 0
+!PLAY R 0
+!ERASE R 0
+!DUMP R
+!SET F 0 hello
+!DUMP F</pre></section>
+  </main>
+</body>
+</html>
