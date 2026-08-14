@@ -1,6 +1,6 @@
 # Sinovox 声音工坊
 
-Browser control surface for Kraftor Sinovox firmware. GUI v1.2 provides live
+Browser control surface for Kraftor Sinovox firmware. GUI v1.3 provides live
 Chinese/Pinyin or English speech over USB Serial, complete MIDI voice control,
 RAM/FRAM sentence editing and printable MIDI reference sheets.
 
@@ -13,14 +13,15 @@ RAM/FRAM sentence editing and printable MIDI reference sheets.
 - Select all six Sinovox speakers.
 - Control language, pitch, speed and volume over serial and MIDI.
 - Match MIDI channels 1–15 to the Kraftor DIP switches.
-- Edit 20 RAM sentences and up to 100 persistent FRAM sentences.
+- Edit 20 RAM sentences and up to 100 persistent FRAM sentences, each with its
+  own English or Chinese/Pinyin language setting.
 - Bulk-fill sentence banks and print note-reference sheets.
 - Five visual skins based on rice paper, lacquer, jade, peony and midnight.
 
 ## Requirements
 
 - Chrome or Edge with Web Serial and Web MIDI.
-- Kraftor running `Kraftor_SInovox_Serial&MIDI` firmware v1.0 or later.
+- Kraftor running `Kraftor_SInovox_Serial&MIDI` firmware v1.3 or later.
 - Sinovox connected to Kraftor `Serial5`.
 
 Open `index.html`, click **Select port**, then choose the Kraftor USB serial
@@ -33,7 +34,7 @@ The GUI keeps USB Serial and MIDI controls aligned with the firmware:
 | Control | Range | MIDI |
 | --- | --- | --- |
 | Voice | indices 0–5, speakers 3/51/52/53/54/55 | CC 1 |
-| Pitch | 0–10 | Pitch bend |
+| Pitch | 0–10, applies to the next utterance | CC 5 |
 | Speed | 0–10 | CC 2 |
 | Volume | 0–10 | CC 3 |
 | Language | 0 English, 1 Chinese/Pinyin | CC 4 |
@@ -67,6 +68,8 @@ the speech box. It does not add `[i1]`; the firmware adds that tag.
 | 48–127 | Play FRAM slots 0–79 |
 
 FRAM slots 80–99 remain available through the serial interface. Sentence
-length is limited to 200 ASCII bytes.
+length is limited to 200 ASCII bytes. Use a slot’s two-button `EN | PY` selector
+to choose its stored language. MIDI-note and Play-button recall use that saved language,
+independently of the current Voice language.
 
 See [user_manual.html](user_manual.html) for the full workflow and commands.

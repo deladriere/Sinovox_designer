@@ -742,6 +742,46 @@
       letter-spacing: 0.04em;
     }
 
+    .slot-language-selector {
+      display: inline-grid;
+      grid-template-columns: repeat(2, 30px);
+      width: fit-content;
+      margin-top: 2px;
+      padding: 2px;
+      border: 1px solid rgba(120, 92, 48, 0.48);
+      border-radius: 4px;
+      background: rgba(42, 34, 22, 0.88);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55);
+    }
+
+    .slot-language-button {
+      min-width: 0;
+      padding: 3px 4px;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      color: #453623;
+      background: linear-gradient(180deg, #ece2c8 0%, #d3c6a3 100%);
+      font: 800 9px/1.3 var(--font-mono);
+      letter-spacing: 0.04em;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+
+    .slot-language-button + .slot-language-button { border-left-color: rgba(120, 92, 48, 0.38); }
+
+    .slot-language-button.active {
+      border-color: #56090c;
+      color: #fff4dc;
+      background: linear-gradient(180deg, #b8302d 0%, #98171a 55%, #7f1114 100%);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.55);
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    .slot-language-button:hover:not(:disabled):not(.active) {
+      border-color: var(--bakelite);
+      color: var(--bakelite);
+      background: #fff9e9;
+    }
+
     .slot-input {
       padding: 7px 10px;
       font-size: 13px;
@@ -1255,10 +1295,10 @@
     }
     .version-readout { display: none; }
     .manual-link {
-      min-height: 30px; padding: 4px 7px; border: 0; color: #d8c8aa;
-      font-size: 0; background: transparent;
+      min-height: 30px; padding: 4px 8px; border: 0; color: #d8c8aa;
+      gap: 6px; font-size: 10px; background: transparent;
     }
-    .manual-link::before { content: "\f013"; font: 20px/1 "Font Awesome 6 Free"; font-weight: 900; }
+    .manual-link i { font-size: 15px; }
     .skin-select { display: none; }
 
     .panel {
@@ -1591,12 +1631,12 @@
        else at this size, so the rows go with them. */
     .connection-grid .conn-label-row { display: none; }
 
-    /* Brass push key. Renders at font-size 0 with a gear glyph in ::before. */
+    /* Explicit brass push keys for help and the public project page. */
     .manual-link {
       justify-content: center;
-      width: 36px;
+      width: auto;
       min-height: 32px;
-      padding: 0;
+      padding: 0 10px;
       border: 0;
       border-radius: 4px;
       color: #241d12;
@@ -1608,8 +1648,6 @@
         0 4px 8px rgba(0, 0, 0, 0.5);
       transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
     }
-
-    .manual-link::before { font-size: 17px; }
 
     .manual-link:hover {
       color: #241d12;
@@ -2316,9 +2354,8 @@
       text-overflow: ellipsis;
     }
 
-    /* The speaker number, in the same counter window a knob uses for its
-       value. It was already in the markup for screen readers and hidden; shown
-       here it finishes the bay on the deck's bottom band. */
+    /* The voice CC assignment and value, in the same counter window a knob
+       uses for its live CC readout. */
     .voice-choice span {
       display: flex;
       position: absolute;
@@ -2539,7 +2576,7 @@
         inset 0 1px 0 rgba(239, 215, 154, 0.28),
         0 1px 2px rgba(0, 0, 0, 0.55);
       font: 700 11px/1.3 var(--font-ui);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.02em;
       text-align: center;
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
     }
@@ -2573,9 +2610,9 @@
       box-shadow:
         inset 0 2px 5px rgba(0, 0, 0, 0.85),
         0 1px 0 rgba(239, 215, 154, 0.12);
-      font: 700 13px/1.3 var(--font-mono);
+      font: 700 10px/1 var(--font-mono);
       font-variant-numeric: tabular-nums;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-shadow: 0 0 7px rgba(255, 181, 74, 0.55);
     }
 
@@ -3321,7 +3358,7 @@
       main::before { top: 10px; left: 10px; right: 10px; bottom: 14px; border-radius: 6px; }
       header { border-radius: 6px 6px 0 0; }
       .monitor-panel { border-radius: 0 0 6px 6px; }
-      .manual-link { width: 40px; }
+      .manual-link { width: auto; padding-inline: 8px; }
       /* Phone width: narrower bays and a smaller circle, so three knob bays and
          a two-across portrait grid still fit at 320px. The knob, the arc and
          the portraits all follow these two numbers. */
@@ -3350,8 +3387,8 @@
         <span id="headerDeviceStatus" class="header-device disconnected">Device disconnected</span>
         <span class="header-transport"><i class="fa-solid fa-circle-nodes"></i> Web MIDI</span>
         <span class="header-transport"><i class="fa-solid fa-ethernet"></i> Web Serial</span>
-        <div id="versionReadout" class="version-readout">GUI v1.2 | FW --</div>
-        <a class="manual-link" href="user_manual.html" target="_blank" rel="noopener noreferrer" aria-label="Open settings and manual">Manual</a>
+        <div id="versionReadout" class="version-readout">GUI v1.3 | FW --</div>
+        <a class="manual-link" href="user_manual.html" target="_blank" rel="noopener noreferrer" aria-label="Open help and user manual"><i class="fa-solid fa-circle-question" aria-hidden="true"></i><span>Help</span></a>
         <select id="skinSelect" class="skin-select" aria-label="Skin">
           <option value="amiga">Rice paper</option>
           <option value="hal">Lacquer</option>
@@ -3501,12 +3538,12 @@
             <div class="discrete-control voice-control">
               <span class="control-title">Voice</span>
               <div class="voice-choice-grid" role="radiogroup" aria-label="Sinovox speaker">
-                <button type="button" class="voice-choice active" data-voice="0" role="radio" aria-checked="true" aria-label="XiaoYan, female, speaker 3"><img src="assets/voice-01.png" alt=""><strong>XiaoYan</strong><span>3 · female</span></button>
-                <button type="button" class="voice-choice" data-voice="1" role="radio" aria-checked="false" aria-label="XuJiu, male, speaker 51"><img src="assets/voice-02.png" alt=""><strong>XuJiu</strong><span>51 · male</span></button>
-                <button type="button" class="voice-choice" data-voice="2" role="radio" aria-checked="false" aria-label="XuDuo, male, speaker 52"><img src="assets/voice-03.png" alt=""><strong>XuDuo</strong><span>52 · male</span></button>
-                <button type="button" class="voice-choice" data-voice="3" role="radio" aria-checked="false" aria-label="XiaoPing, female, speaker 53"><img src="assets/voice-04.png" alt=""><strong>XiaoPing</strong><span>53 · female</span></button>
-                <button type="button" class="voice-choice" data-voice="4" role="radio" aria-checked="false" aria-label="DonaldDuck voice, speaker 54"><img src="assets/voice-05.png" alt=""><strong>DonaldDuck</strong><span>54 · duck</span></button>
-                <button type="button" class="voice-choice" data-voice="5" role="radio" aria-checked="false" aria-label="XuXiaoBao, child, speaker 55"><img src="assets/voice-06.png" alt=""><strong>XuXiaoBao</strong><span>55 · kids</span></button>
+                <button type="button" class="voice-choice active" data-voice="0" role="radio" aria-checked="true" aria-label="XiaoYan, female, speaker 3, MIDI CC 1 value 0"><img src="assets/voice-01.png" alt=""><strong>XiaoYan</strong><span>CC 1 · 0</span></button>
+                <button type="button" class="voice-choice" data-voice="1" role="radio" aria-checked="false" aria-label="XuJiu, male, speaker 51, MIDI CC 1 value 26"><img src="assets/voice-02.png" alt=""><strong>XuJiu</strong><span>CC 1 · 26</span></button>
+                <button type="button" class="voice-choice" data-voice="2" role="radio" aria-checked="false" aria-label="XuDuo, male, speaker 52, MIDI CC 1 value 51"><img src="assets/voice-03.png" alt=""><strong>XuDuo</strong><span>CC 1 · 51</span></button>
+                <button type="button" class="voice-choice" data-voice="3" role="radio" aria-checked="false" aria-label="XiaoPing, female, speaker 53, MIDI CC 1 value 77"><img src="assets/voice-04.png" alt=""><strong>XiaoPing</strong><span>CC 1 · 77</span></button>
+                <button type="button" class="voice-choice" data-voice="4" role="radio" aria-checked="false" aria-label="DonaldDuck voice, speaker 54, MIDI CC 1 value 102"><img src="assets/voice-05.png" alt=""><strong>DonaldDuck</strong><span>CC 1 · 102</span></button>
+                <button type="button" class="voice-choice" data-voice="5" role="radio" aria-checked="false" aria-label="XuXiaoBao, child, speaker 55, MIDI CC 1 value 127"><img src="assets/voice-06.png" alt=""><strong>XuXiaoBao</strong><span>CC 1 · 127</span></button>
               </div>
               <span class="control-map">CC 1</span>
               <span id="voiceValue" class="sr-only">0</span>
@@ -3516,20 +3553,20 @@
             <div class="pot">
               <div class="knob-shell"><img id="pitchKnobFace" class="knob-face" src="assets/brass-knob.png" alt=""><div id="pitchPot" class="pot-widget"></div></div>
               <div class="pot-label">Pitch</div>
-              <div class="pot-map">Pitch bend · 0–10</div>
-              <div id="pitchValue" class="pot-value">5</div>
+              <div class="pot-map">CC 5 · 0–10 · next utterance</div>
+              <div id="pitchValue" class="pot-value" data-value="5">CC 5 · 5</div>
             </div>
             <div class="pot">
               <div class="knob-shell"><img id="speedKnobFace" class="knob-face" src="assets/brass-knob.png" alt=""><div id="speedPot" class="pot-widget"></div></div>
               <div class="pot-label">Speed</div>
               <div class="pot-map">CC 2 · 0–10</div>
-              <div id="speedValue" class="pot-value">5</div>
+              <div id="speedValue" class="pot-value" data-value="5">CC 2 · 5</div>
             </div>
             <div class="pot">
               <div class="knob-shell"><img id="volumeKnobFace" class="knob-face" src="assets/brass-knob.png" alt=""><div id="volumePot" class="pot-widget"></div></div>
               <div class="pot-label">Volume</div>
               <div class="pot-map">CC 3 · 0–10</div>
-              <div id="volumeValue" class="pot-value">10</div>
+              <div id="volumeValue" class="pot-value" data-value="10">CC 3 · 10</div>
             </div>
           </div>
           </div>
@@ -3586,12 +3623,12 @@
               <button id="ramReloadBtn" type="button">Reload from board</button>
               <button id="ramSaveAllBtn" type="button">Save all changed</button>
             </div>
-            <button id="ramRefSheetBtn" type="button" title="Printable RAM map (row # · MIDI note · text)">Reference
+            <button id="ramRefSheetBtn" type="button" title="Printable RAM map (row # · language · MIDI note · text)">Reference
               sheet…</button>
           </div>
         </div>
         <div class="field bulk-dump-panel">
-          <label for="ramBulkDump">Bulk paste · one non-empty line per slot (blank lines ignored)</label>
+          <label for="ramBulkDump">Bulk paste · one non-empty line per slot · uses the current Voice language</label>
           <textarea id="ramBulkDump" spellcheck="false"
             placeholder="Sentence for slot #0&#10;Sentence for slot #1&#10;…"></textarea>
           <div class="row" style="align-items: center; flex-wrap: wrap; gap: 10px;">
@@ -3613,12 +3650,12 @@
               <button id="framReloadBtn" type="button">Reload from board</button>
               <button id="framSaveAllBtn" type="button">Save all changed</button>
             </div>
-            <button id="framRefSheetBtn" type="button" title="Printable FRAM map (row # · MIDI note · text)">Reference
+            <button id="framRefSheetBtn" type="button" title="Printable FRAM map (row # · language · MIDI note · text)">Reference
               sheet…</button>
           </div>
         </div>
         <div class="field bulk-dump-panel">
-          <label for="framBulkDump">Bulk paste · one non-empty line per slot (blank lines ignored)</label>
+          <label for="framBulkDump">Bulk paste · one non-empty line per slot · uses the current Voice language</label>
           <textarea id="framBulkDump" spellcheck="false"
             placeholder="Sentence for slot #0&#10;Sentence for slot #1&#10;…"></textarea>
           <div class="row" style="align-items: center; flex-wrap: wrap; gap: 10px;">
@@ -3656,7 +3693,7 @@
       let voicePotsReady = false;
       const voiceDials = {};
 
-      const GUI_VERSION = '1.2';
+      const GUI_VERSION = '1.3';
       const DEFAULT_RAM_SLOTS = 20;
       const DEFAULT_RAM_BASE = 28;
       const DEFAULT_SENTENCE_MAX = 200;
@@ -3734,10 +3771,10 @@
         const defaults = voicePresets.default;
         return {
           language: clampVoiceValue(document.getElementById('languageValue')?.textContent, 'language', defaults.language),
-          pitch: clampVoiceValue(document.getElementById('pitchValue')?.textContent, 'pitch', defaults.pitch),
-          speed: clampVoiceValue(document.getElementById('speedValue')?.textContent, 'speed', defaults.speed),
+          pitch: clampVoiceValue(document.getElementById('pitchValue')?.dataset.value, 'pitch', defaults.pitch),
+          speed: clampVoiceValue(document.getElementById('speedValue')?.dataset.value, 'speed', defaults.speed),
           voice: clampVoiceValue(document.getElementById('voiceValue')?.textContent, 'voice', defaults.voice),
-          volume: clampVoiceValue(document.getElementById('volumeValue')?.textContent, 'volume', defaults.volume)
+          volume: clampVoiceValue(document.getElementById('volumeValue')?.dataset.value, 'volume', defaults.volume)
         };
       }
 
@@ -3829,6 +3866,14 @@
         if (face) face.style.setProperty('--knob-angle', `${angle}deg`);
       }
 
+      function updatePotReadout(key, value) {
+        const output = document.getElementById(`${key}Value`);
+        if (!output) return;
+        const cc = key === 'pitch' ? 5 : key === 'speed' ? 2 : 3;
+        output.dataset.value = String(value);
+        output.textContent = `CC ${cc} · ${value}`;
+      }
+
       function initVoicePots() {
         if (!window.Nexus) {
           appendSerialLog('<< NexusUI failed to load; pots unavailable\r\n');
@@ -3841,7 +3886,7 @@
         updateDiscreteVoiceUi('language', savedVoice.language);
         updateDiscreteVoiceUi('voice', savedVoice.voice);
         const configs = [
-          { key: 'pitch', selector: '#pitchPot', value: savedVoice.pitch, output: 'pitchValue', kind: 'bend', label: 'pitch' },
+          { key: 'pitch', selector: '#pitchPot', value: savedVoice.pitch, output: 'pitchValue', kind: 'cc', cc: 5, label: 'pitch' },
           { key: 'speed', selector: '#speedPot', value: savedVoice.speed, output: 'speedValue', kind: 'cc', cc: 2, label: 'speed' },
           { key: 'volume', selector: '#volumePot', value: savedVoice.volume, output: 'volumeValue', kind: 'cc', cc: 3, label: 'volume' }
         ];
@@ -3849,8 +3894,7 @@
         configs.forEach(config => {
           try {
             const range = VOICE_RANGES[config.key];
-            const output = document.getElementById(config.output);
-            if (output) output.textContent = String(config.value);
+            updatePotReadout(config.key, config.value);
             updateKnobFace(config.key, config.value);
             const dial = new Nexus.Dial(config.selector, {
               size: [68, 68],
@@ -3865,8 +3909,7 @@
             dial.on('change', value => {
               const rounded = clampVoiceValue(value, config.key, range.min);
               const chipValue = rounded;
-              const el = document.getElementById(config.output);
-              if (el) el.textContent = String(chipValue);
+              updatePotReadout(config.key, chipValue);
               updateKnobFace(config.key, chipValue);
               saveVoiceSettings();
               if (voicePotsReady) {
@@ -3885,8 +3928,7 @@
         const entry = voiceDials[key];
         const range = VOICE_RANGES[key] || { min: 0, max: 255 };
         const rounded = clampVoiceValue(value, key, range.min);
-        const output = document.getElementById(`${key}Value`);
-        if (output) output.textContent = String(rounded);
+        updatePotReadout(key, rounded);
         updateKnobFace(key, rounded);
         saveVoiceSettings();
 
@@ -3941,11 +3983,6 @@
           return Math.max(0, Math.min(127, Math.ceil(value * 127 / 10)));
         }
         return Math.max(0, Math.min(127, Math.round(value)));
-      }
-
-      function pitchToBendValue(pitch) {
-        // Firmware maps signed pitch bend -8192..8191 directly to Sinovox 0..10.
-        return Math.max(0, Math.min(16383, Math.ceil(pitch * 16383 / 10)));
       }
 
       function scheduleVoiceSerialSync() {
@@ -4263,6 +4300,11 @@
         return '';
       }
 
+      function slotCellLanguage(store, idx) {
+        const state = slotState[store];
+        return state && state[idx] ? slotLanguageLabel(state[idx].language) : 'PY';
+      }
+
       /** Last index in [lo, hi) with non-empty slot text, or -1 if none. */
       function lastNonEmptySlotIndex(store, lo, hi) {
         for (let i = hi - 1; i >= lo; i--) {
@@ -4298,7 +4340,7 @@
           : '';
         let head = '<div class="midi-ref-head"><h2 class="midi-ref-title">Sinovox 声音工坊</h2>';
         head += '<p class="midi-ref-sub">' + escapeHtml(scopeLabel) + '</p>';
-        head += '<p class="midi-ref-sub">Row index · MIDI note · sentence text</p>';
+        head += '<p class="midi-ref-sub">Row index · language · MIDI note · sentence text</p>';
         head += `<p class="midi-ref-sub">${escapeHtml(new Date().toLocaleString())}</p>`;
         head += firmwareLine
           ? `<p class="midi-ref-sub">${firmwareLine}</p>`
@@ -4320,6 +4362,7 @@
             ramTbl +=
               '<table><thead><tr>' +
               '<th class="col-idx">#</th>' +
+              '<th>Lang</th>' +
               '<th class="col-note col-midi">MIDI</th>' +
               '<th class="col-name">Name</th>' +
               '<th class="col-text">Sentence</th>' +
@@ -4330,6 +4373,7 @@
               const cell = escapeHtml(textRaw) || '&mdash;';
               ramTbl += '<tr>' +
                 '<td class="col-idx">' + i + '</td>' +
+                '<td>' + slotCellLanguage('R', i) + '</td>' +
                 '<td class="col-note col-midi">' + note + '</td>' +
                 '<td class="col-name">' + escapeHtml(midiNoteName(note)) + '</td>' +
                 '<td class="col-text">' + cell + '</td></tr>';
@@ -4355,6 +4399,7 @@
                 framTb +=
                   '<table><thead><tr>' +
                   '<th class="col-idx">#</th>' +
+                  '<th>Lang</th>' +
                   '<th class="col-note col-midi">MIDI</th>' +
                   '<th class="col-name">Name</th>' +
                   '<th class="col-text">Sentence</th>' +
@@ -4365,6 +4410,7 @@
                   const cell = escapeHtml(textRaw) || '&mdash;';
                   framTb += '<tr>' +
                     '<td class="col-idx">' + i + '</td>' +
+                    '<td>' + slotCellLanguage('F', i) + '</td>' +
                     '<td class="col-note col-midi">' + note + '</td>' +
                     '<td class="col-name">' + escapeHtml(midiNoteName(note)) + '</td>' +
                     '<td class="col-text">' + cell + '</td></tr>';
@@ -4386,6 +4432,7 @@
                 '</strong>. No MIDI note (use GUI Play or <code>!PLAY F idx</code>).</p>' +
                 '<table><thead><tr>' +
                 '<th class="col-idx">#</th>' +
+                '<th>Lang</th>' +
                 '<th class="col-note">MIDI</th>' +
                 '<th class="col-name"> </th>' +
                 '<th class="col-text">Sentence</th>' +
@@ -4395,6 +4442,7 @@
                 const cell = escapeHtml(textRaw) || '&mdash;';
                 framTb += '<tr>' +
                   '<td class="col-idx">' + i + '</td>' +
+                  '<td>' + slotCellLanguage('F', i) + '</td>' +
                   '<td class="col-note">&mdash;</td>' +
                   '<td class="col-name">&mdash;</td>' +
                   '<td class="col-text">' + cell + '</td></tr>';
@@ -4658,8 +4706,15 @@
           }
         }
 
-        slotState.R = Array.from({ length: boardCaps.ram }, () => ({ savedText: '', dirty: false }));
-        slotState.F = Array.from({ length: boardCaps.fram }, () => ({ savedText: '', dirty: false }));
+        const defaultLanguage = currentSlotLanguage();
+        const emptySlotState = () => ({
+          savedText: '',
+          savedLanguage: defaultLanguage,
+          language: defaultLanguage,
+          dirty: false
+        });
+        slotState.R = Array.from({ length: boardCaps.ram }, emptySlotState);
+        slotState.F = Array.from({ length: boardCaps.fram }, emptySlotState);
         renderSlotList('R');
         renderSlotList('F');
         framSyncedOnce = false;
@@ -4684,6 +4739,33 @@
         if (list) list.innerHTML = '<div class="bank-empty">Connect to a board with FRAM (RC256 at 0x50) to edit sentences.</div>';
         const ramList = document.getElementById('ramSlotList');
         if (ramList) ramList.innerHTML = '<div class="bank-empty">Connect to a board to edit RAM sentences.</div>';
+      }
+
+      function currentSlotLanguage() {
+        return Number(document.getElementById('languageValue')?.textContent) === 0 ? 0 : 1;
+      }
+
+      function slotLanguageLabel(language) {
+        return Number(language) === 0 ? 'EN' : 'PY';
+      }
+
+      function updateSlotLanguageBadge(store, idx) {
+        const state = slotState[store]?.[idx];
+        const selector = document.getElementById(`language-${store}-${idx}`);
+        if (!state || !selector) return;
+        selector.querySelectorAll('.slot-language-button').forEach(button => {
+          const active = Number(button.dataset.language) === state.language;
+          button.classList.toggle('active', active);
+          button.setAttribute('aria-checked', String(active));
+        });
+      }
+
+      function setSlotLanguage(store, idx, language) {
+        const state = slotState[store]?.[idx];
+        if (!state) return;
+        state.language = Number(language) === 0 ? 0 : 1;
+        updateSlotLanguageBadge(store, idx);
+        refreshModifiedFlag(store, idx);
       }
 
       function renderSlotList(store) {
@@ -4722,6 +4804,23 @@
           const badge = document.createElement('div');
           badge.className = 'slot-badge';
           badge.innerHTML = `<span class="slot-index">#${i}</span>${noteBadgeLine}<span class="slot-status" id="status-${store}-${i}"></span>`;
+          const languageSelector = document.createElement('div');
+          languageSelector.id = `language-${store}-${i}`;
+          languageSelector.className = 'slot-language-selector';
+          languageSelector.setAttribute('role', 'radiogroup');
+          languageSelector.setAttribute('aria-label', `Language for ${store === 'R' ? 'RAM' : 'FRAM'} slot ${i}`);
+          [[0, 'EN', 'English'], [1, 'PY', 'Chinese/Pinyin']].forEach(([language, label, title]) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'slot-language-button';
+            button.dataset.language = String(language);
+            button.textContent = label;
+            button.title = title;
+            button.setAttribute('role', 'radio');
+            button.addEventListener('click', () => setSlotLanguage(store, i, language));
+            languageSelector.appendChild(button);
+          });
+          badge.appendChild(languageSelector);
           row.appendChild(badge);
 
           const input = document.createElement('input');
@@ -4767,19 +4866,27 @@
         }
         list.innerHTML = '';
         list.appendChild(frag);
+        for (let i = 0; i < count; ++i) updateSlotLanguageBadge(store, i);
       }
 
       function handleSentReply(line) {
-        const m = /^!SENT\s+([RF])\s+(\d+)\s?(.*)$/.exec(line);
+        const m = /^!SENT\s+([RF])\s+(\d+)\s+([01])\s?(.*)$/.exec(line);
         if (!m) return;
         const store = m[1];
         const idx = parseInt(m[2], 10);
-        const text = m[3];
+        const language = parseInt(m[3], 10);
+        const text = m[4];
         const state = slotState[store][idx];
         if (!state) return;
+        const wasDirty = state.dirty;
         state.savedText = text;
+        state.savedLanguage = language;
         const input = document.getElementById(`slot-${store}-${idx}`);
-        if (input && !state.dirty) input.value = text;
+        if (!wasDirty) {
+          if (input) input.value = text;
+          state.language = language;
+          updateSlotLanguageBadge(store, idx);
+        }
         refreshModifiedFlag(store, idx);
         setSlotStatus(store, idx, '', false);
       }
@@ -4802,7 +4909,7 @@
         const row = document.getElementById(`row-${store}-${idx}`);
         const state = slotState[store][idx];
         if (!input || !row || !state) return;
-        const dirty = input.value !== state.savedText;
+        const dirty = input.value !== state.savedText || state.language !== state.savedLanguage;
         state.dirty = dirty;
         row.classList.toggle('modified', dirty);
       }
@@ -4858,6 +4965,7 @@
           return;
         }
         const applyCount = Math.min(n, lines.length);
+        const language = currentSlotLanguage();
         let truncatedLines = 0;
         for (let i = 0; i < applyCount; i++) {
           let t = lines[i];
@@ -4868,12 +4976,15 @@
           const input = document.getElementById(`slot-${store}-${i}`);
           if (!input) continue;
           input.value = t;
+          arr[i].language = language;
+          updateSlotLanguageBadge(store, i);
           refreshModifiedFlag(store, i);
           setSlotStatus(store, i, '', false);
         }
         const extraLines = Math.max(0, lines.length - n);
         const tail = [];
         tail.push(`${applyCount} line(s) → slots #0–#${applyCount > 0 ? applyCount - 1 : 0}`);
+        tail.push(`${slotLanguageLabel(language)} language`);
         if (skippedBlanks) tail.push(`${skippedBlanks} blank line(s) skipped`);
         if (extraLines) tail.push(`${extraLines} extra line(s) ignored (${n} slots)`);
         if (truncatedLines) tail.push(`${truncatedLines} trimmed to ${maxLen} chars`);
@@ -4885,14 +4996,15 @@
         const input = document.getElementById(`slot-${store}-${idx}`);
         if (!input) return;
         const text = escapeForCommand(input.value);
+        const state = slotState[store][idx];
+        if (!state) return;
+        const language = state.language;
         setSlotStatus(store, idx, 'saving...', false);
         try {
-          await sendCommand(`!SET ${store} ${idx} ${text}`, { ack: true, timeoutMs: STORAGE_COMMAND_TIMEOUT_MS });
-          const state = slotState[store][idx];
-          if (state) {
-            state.savedText = text;
-            refreshModifiedFlag(store, idx);
-          }
+          await sendCommand(`!SET ${store} ${idx} ${language} ${text}`, { ack: true, timeoutMs: STORAGE_COMMAND_TIMEOUT_MS });
+          state.savedText = text;
+          state.savedLanguage = language;
+          refreshModifiedFlag(store, idx);
           setSlotStatus(store, idx, 'saved', false);
         } catch (err) {
           setSlotStatus(store, idx, slotCommandErrorText('save', err), !isTimeoutError(err));
@@ -4915,7 +5027,12 @@
           await sendCommand(`!ERASE ${store} ${idx}`, { ack: true, timeoutMs: STORAGE_COMMAND_TIMEOUT_MS });
           const state = slotState[store][idx];
           const input = document.getElementById(`slot-${store}-${idx}`);
-          if (state) state.savedText = '';
+          if (state) {
+            state.savedText = '';
+            state.savedLanguage = 1;
+            state.language = 1;
+            updateSlotLanguageBadge(store, idx);
+          }
           if (input) input.value = '';
           refreshModifiedFlag(store, idx);
           setSlotStatus(store, idx, 'erased', false);
@@ -4930,7 +5047,7 @@
         for (let i = 0; i < arr.length; ++i) {
           const input = document.getElementById(`slot-${store}-${i}`);
           if (!input) continue;
-          if (input.value !== arr[i].savedText) {
+          if (arr[i].dirty) {
             await saveSlot(store, i);
           }
         }
@@ -5192,13 +5309,6 @@
           return;
         }
 
-        if (config.kind === 'bend') {
-          const bendValue = pitchToBendValue(chipValue);
-          const lsb = bendValue & 0x7F;
-          const msb = (bendValue >> 7) & 0x7F;
-          midiOutput.send([0xE0 | channel, lsb, msb]);
-          appendSerialLog(`>> MIDI CH${channelNumber} ${config.label} bend ${bendValue} (chip ${chipValue})\r\n`);
-        }
       }
 
       function sendCurrentVoiceSettings() {
@@ -5224,22 +5334,20 @@
         const channelNumber = channel + 1;
         const note = 28;
         const velocity = 100;
-        const settings = readVoiceSettings();
         const previousSlotText = slotState.R[0]?.savedText || '';
+        const previousSlotLanguage = slotState.R[0]?.savedLanguage ?? 1;
         const identityText = `MIDI connection. Channel ${MIDI_CHANNEL_WORDS[channel]}.`;
         const button = document.getElementById('midiIdentifyBtn');
         if (button) button.disabled = true;
 
         try {
-          await sendCommand(`!SET R 0 ${identityText}`, {
+          await sendCommand(`!SET R 0 0 ${identityText}`, {
             ack: true,
             timeoutMs: STORAGE_COMMAND_TIMEOUT_MS
           });
-          sendMidiControl({ key: 'language', kind: 'cc', cc: 4, label: 'language' }, 0);
           midiOutput.send([0x90 | channel, note, velocity]);
           midiOutput.send([0x80 | channel, note, 0], window.performance.now() + 300);
-          sendMidiControl({ key: 'language', kind: 'cc', cc: 4, label: 'language' }, settings.language);
-          await sendCommand(previousSlotText ? `!SET R 0 ${previousSlotText}` : '!ERASE R 0', {
+          await sendCommand(previousSlotText ? `!SET R 0 ${previousSlotLanguage} ${previousSlotText}` : '!ERASE R 0', {
             ack: true,
             timeoutMs: STORAGE_COMMAND_TIMEOUT_MS
           });
