@@ -7,32 +7,81 @@
   <title>Sinovox 声音工坊</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&amp;family=Zen+Kaku+Gothic+New:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&amp;family=Noto+Serif+SC:wght@400;500;700&amp;family=Shippori+Mincho:wght@500;700&amp;family=Zen+Kaku+Gothic+New:wght@400;500;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <style>
+    /* Single source of truth for design tokens. Values are the ones the page
+       actually resolved to before the three overlapping token blocks were merged. */
     :root {
-      --bg: #d9e0eb;
-      --bg-deep: #b8c4d8;
-      --panel: rgba(250, 247, 240, 0.88);
-      --panel-solid: #faf7f0;
-      --panel-soft: #f3efe6;
-      --ink: #1c1917;
-      --muted: #5c564c;
-      --line: rgba(44, 63, 107, 0.18);
-      --line-strong: rgba(28, 25, 23, 0.28);
-      --indigo: #2c3f6b;
-      --indigo-soft: #4a5f8f;
-      --vermillion: #c23b22;
-      --vermillion-deep: #8f2414;
-      --gold: #a67c2d;
-      --connected: #2f6b4f;
-      --danger: #c23b22;
-      --terminal: #1f6b58;
-      --terminal-bg: #141814;
-      --shadow: 0 18px 40px rgba(28, 39, 68, 0.12);
-      --radius: 2px;
-      --font-ui: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
-      --font-display: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+      --bg: #eee8dc;
+      --bg-deep: #d8cdbb;
+      --panel: rgba(251, 247, 239, 0.93);
+      --panel-solid: #fbf7ef;
+      --panel-soft: rgba(255, 253, 248, 0.68);
+      --ink: #241711;
+      --muted: #63564c;
+      --line: rgba(107, 74, 48, 0.22);
+      --line-strong: rgba(114, 26, 22, 0.54);
+      /* Retuned for the vintage instrument palette: --indigo was a dark green
+         that drove the focus ring and button hover, --danger a cool orange-red
+         that fought the brand red. Both are now warm brass / lamp red. */
+      --indigo: #b0873c;
+      --indigo-soft: #e0bb6d;
+      --vermillion: #9e1518;
+      --vermillion-deep: #771014;
+      --gold: #bf9b5b;
+      --connected: #4f8b5e;
+      --danger: #c3341f;
+      --terminal: #7db89a;
+      --terminal-bg: #101814;
+      --shadow: 0 12px 32px rgba(45, 34, 22, 0.10);
+      --radius: 4px;
+      --font-ui: "Noto Sans SC", "PingFang SC", "Zen Kaku Gothic New", sans-serif;
+      --font-display: "Noto Serif SC", "Songti SC", "Shippori Mincho", serif;
+      --font-mono: "IBM Plex Mono", "SF Mono", "Menlo", ui-monospace, monospace;
+
+      /* Materials: lacquered chassis, brass, ivory faceplate, control deck,
+         bakelite keys, phosphor screen, lamp jewels. */
+      --lacquer: #14110e;
+      --lacquer-2: #1e1a16;
+      --brass: #c8a45c;
+      --brass-dim: #8a6f3c;
+      --brass-hi: #efd79a;
+      --ivory: #f3e8d2;
+      --ivory-2: #e7d9bd;
+      --deck: #3a3527;
+      --deck-2: #2a2619;
+      --bakelite: #a8181c;
+      --bakelite-hi: #d43b39;
+      --bakelite-lo: #6b0f12;
+      --phosphor: #86dba6;
+      --phosphor-bg: #0c130f;
+      --amber: #ffb54a;
+      --jewel-green: #4fd67e;
+      --jewel-red: #b3231f;
+
+      /* One rectangle for every bay on the deck — language, the six portraits
+         and the three knobs — so the row reads as one machined plate. The width
+         is set by the widest thing a bay has to hold: the knob's 104px engraved
+         tick arc, plus 2px of clearance each side.
+
+         Every brass circle on the deck is --disc-out across, and its centre
+         sits --disc-cy down from the bay's top edge; the two brass bands below
+         it start at --plate-t and --num-t. Faces and knobs both derive from
+         these, which is what keeps the deck on one grid. */
+      --bay-h: 192px;
+      --bay-w: 108px;
+      --bay-gap: 7px;
+      --disc-cy: 60px;
+      --plate-t: 126px;
+      --plate-h: 21px;
+      --num-t: 156px;
+      --num-h: 25px;
+
+      /* Reusable hardware bits */
+      --screw-dome: radial-gradient(circle at 38% 32%, #f2e0b6 0%, #c6a469 34%, #6d5931 66%, #241d13 100%);
+      --screw-slot: linear-gradient(118deg, rgba(0, 0, 0, 0) 42%, rgba(26, 19, 10, 0.78) 42%, rgba(26, 19, 10, 0.78) 58%, rgba(0, 0, 0, 0) 58%);
+      --brushed: repeating-linear-gradient(90deg, rgba(255, 246, 222, 0.030) 0 2px, rgba(0, 0, 0, 0.035) 2px 4px);
     }
 
     * { box-sizing: border-box; }
@@ -102,119 +151,6 @@
     @keyframes seal-glow {
       0%, 100% { box-shadow: 0 0 0 0 rgba(194, 59, 34, 0.0); }
       50% { box-shadow: 0 0 0 6px rgba(194, 59, 34, 0.08); }
-    }
-
-    /* --- alternate instrument skins --- */
-    body.skin-hal {
-      --bg: #1a1714;
-      --bg-deep: #0d0c0b;
-      --panel: rgba(34, 30, 27, 0.92);
-      --panel-solid: #2a2623;
-      --panel-soft: #35302c;
-      --ink: #f0ebe3;
-      --muted: #b0a79a;
-      --line: rgba(240, 235, 227, 0.12);
-      --line-strong: rgba(232, 69, 47, 0.35);
-      --indigo: #e8452f;
-      --indigo-soft: #ff6a52;
-      --vermillion: #e8452f;
-      --vermillion-deep: #ff8a78;
-      --gold: #d4b06a;
-      --connected: #4caf7a;
-      --danger: #e8452f;
-      --terminal: #ff6a52;
-      --terminal-bg: #0a0908;
-      --shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
-      background:
-        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(232, 69, 47, 0.18), transparent 55%),
-        linear-gradient(180deg, #221e1b, #0d0c0b);
-    }
-
-    body.skin-wopr {
-      --bg: #d9e4d6;
-      --bg-deep: #b7c8b4;
-      --panel: rgba(244, 248, 241, 0.9);
-      --panel-solid: #f4f8f1;
-      --panel-soft: #e7efe4;
-      --ink: #1a241c;
-      --muted: #4f6354;
-      --line: rgba(47, 90, 58, 0.16);
-      --line-strong: rgba(26, 36, 28, 0.28);
-      --indigo: #2f5a3a;
-      --indigo-soft: #4a7a56;
-      --vermillion: #c7a24a;
-      --vermillion-deep: #8f7128;
-      --gold: #c7a24a;
-      --connected: #2f6b4f;
-      --danger: #b5452c;
-      --terminal: #2f6b4f;
-      --terminal-bg: #101610;
-      --shadow: 0 18px 40px rgba(26, 48, 32, 0.12);
-      background:
-        radial-gradient(ellipse 70% 50% at 80% 0%, rgba(199, 162, 74, 0.16), transparent 50%),
-        linear-gradient(160deg, #e8f0e4, #c5d4c2);
-    }
-
-    body.skin-moon {
-      --bg: #f3e4ea;
-      --bg-deep: #e4cdd7;
-      --panel: rgba(255, 250, 251, 0.9);
-      --panel-solid: #fffafb;
-      --panel-soft: #fff4f7;
-      --ink: #3a2430;
-      --muted: #7a5b68;
-      --line: rgba(196, 92, 122, 0.18);
-      --line-strong: rgba(58, 36, 48, 0.22);
-      --indigo: #8a4b63;
-      --indigo-soft: #c45c7a;
-      --vermillion: #c45c7a;
-      --vermillion-deep: #8f3d58;
-      --gold: #c4a06a;
-      --connected: #4d8a6a;
-      --danger: #c45c7a;
-      --terminal: #8a4b63;
-      --terminal-bg: #241820;
-      --shadow: 0 18px 40px rgba(90, 40, 60, 0.12);
-      background:
-        radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.85), transparent 28%),
-        radial-gradient(ellipse 50% 40% at 85% 20%, rgba(196, 92, 122, 0.16), transparent 50%),
-        linear-gradient(165deg, #fff7f9, #e8d0da);
-    }
-
-    body.skin-alien {
-      --bg: #12182a;
-      --bg-deep: #0b1020;
-      --panel: rgba(24, 32, 52, 0.92);
-      --panel-solid: #182034;
-      --panel-soft: #222c46;
-      --ink: #e8eef8;
-      --muted: #9aabca;
-      --line: rgba(232, 238, 248, 0.12);
-      --line-strong: rgba(217, 74, 43, 0.4);
-      --indigo: #6b87c4;
-      --indigo-soft: #8ea6d8;
-      --vermillion: #d94a2b;
-      --vermillion-deep: #ff7a5c;
-      --gold: #d4b06a;
-      --connected: #3dba8a;
-      --danger: #d94a2b;
-      --terminal: #7eb6ff;
-      --terminal-bg: #070b14;
-      --shadow: 0 22px 50px rgba(0, 0, 0, 0.45);
-      background:
-        radial-gradient(ellipse 55% 35% at 70% 0%, rgba(217, 74, 43, 0.2), transparent 55%),
-        radial-gradient(ellipse 40% 30% at 10% 80%, rgba(107, 135, 196, 0.22), transparent 50%),
-        linear-gradient(180deg, #182038, #0b1020);
-    }
-
-    body.skin-hal::before,
-    body.skin-alien::before {
-      opacity: 0.25;
-    }
-
-    body.skin-hal::after,
-    body.skin-alien::after {
-      border-color: rgba(232, 69, 47, 0.22);
     }
 
     main {
@@ -381,18 +317,6 @@
       font-weight: 700;
     }
 
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--ink);
-      font-size: 12px;
-      white-space: nowrap;
-      background: var(--panel-soft);
-      border: 1px solid var(--line);
-      padding: 4px 8px;
-    }
-
     .status-row {
       display: flex;
       align-items: center;
@@ -416,8 +340,7 @@
       white-space: nowrap;
     }
 
-    .manual-link,
-    .source-link {
+    .manual-link {
       display: inline-flex;
       align-items: center;
       min-height: 32px;
@@ -434,18 +357,10 @@
       transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     }
 
-    .manual-link:hover,
-    .source-link:hover {
+    .manual-link:hover {
       background: var(--indigo);
       color: #faf7f0;
       border-color: var(--indigo);
-    }
-
-    body.skin-hal .manual-link:hover,
-    body.skin-hal .source-link:hover,
-    body.skin-alien .manual-link:hover,
-    body.skin-alien .source-link:hover {
-      color: #fff;
     }
 
     .skin-select {
@@ -455,17 +370,31 @@
       font-size: 12px;
     }
 
+    /* Domed indicator jewel in a brass bezel; .connected is toggled by the
+       serial and MIDI connection handlers. */
     .dot {
-      width: 9px;
-      height: 9px;
+      flex: 0 0 auto;
+      width: 11px;
+      height: 11px;
       border-radius: 50%;
-      background: var(--danger);
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--danger) 20%, transparent);
+      background:
+        radial-gradient(circle at 36% 28%, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 46%),
+        radial-gradient(circle at 50% 62%, #6d1512, #390a09 76%);
+      box-shadow:
+        0 0 0 1px rgba(126, 96, 48, 0.85),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.55);
     }
 
     .dot.connected {
-      background: var(--connected);
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--connected) 25%, transparent);
+      background:
+        radial-gradient(circle at 36% 28%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 46%),
+        radial-gradient(circle at 50% 62%, #6bd08d, #1c6b3f 78%);
+      box-shadow:
+        0 0 0 1px rgba(146, 112, 54, 0.9),
+        inset 0 1px 1px rgba(255, 255, 255, 0.3),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.42),
+        0 0 6px color-mix(in srgb, var(--connected) 65%, transparent);
     }
 
     .panel {
@@ -478,9 +407,6 @@
       box-shadow: var(--shadow);
       animation: rise-in 0.55s ease-out both;
     }
-
-    .panel:nth-of-type(2) { animation-delay: 0.05s; }
-    .panel:nth-of-type(3) { animation-delay: 0.1s; }
 
     .row {
       display: flex;
@@ -655,16 +581,6 @@
       text-align: center;
     }
 
-    body:not(.skin-hal):not(.skin-alien) .pot-value {
-      background: #1c1917;
-      color: #f3efe6;
-      border-color: transparent;
-    }
-
-    body:not(.skin-hal):not(.skin-alien) .pot-widget canvas {
-      background: #1c1917;
-    }
-
     .preset-row {
       display: grid;
       grid-template-columns: minmax(220px, 1fr) auto auto;
@@ -681,15 +597,6 @@
     }
 
     .voice-controls-heading > label { margin: 0; }
-
-    .requires-midi-hint {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      white-space: nowrap;
-    }
 
     .tab-strip {
       display: flex;
@@ -859,35 +766,6 @@
     }
 
     .slot-status.error { color: var(--danger); }
-
-    @media (max-width: 640px) {
-      header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .status-row {
-        justify-content: flex-start;
-        width: 100%;
-      }
-
-      button,
-      select { width: 100%; }
-
-      .brand-seal { width: 48px; height: 48px; font-size: 18px; }
-
-      .connection-grid { grid-template-columns: 1fr; }
-
-      .pot-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
-
-      .preset-row { grid-template-columns: 1fr; }
-
-      .slot-row { grid-template-columns: 1fr; }
-
-      .slot-actions { justify-content: flex-end; }
-
-      body::after { opacity: 0.35; }
-    }
 
     /* --- MIDI reference sheet (screen + print) --- */
     main .panel.midi-ref-vintage {
@@ -1110,30 +988,6 @@
       }
     }
     /* --- Sinovox Chinese instrument skin --- */
-    :root {
-      --bg: #eee8dc;
-      --bg-deep: #d8cdbb;
-      --panel: rgba(255, 252, 245, 0.94);
-      --panel-solid: #fffdf8;
-      --panel-soft: #f2eadc;
-      --ink: #171512;
-      --muted: #6d6253;
-      --line: rgba(66, 48, 30, 0.18);
-      --line-strong: rgba(66, 48, 30, 0.36);
-      --indigo: #193e34;
-      --indigo-soft: #2e6655;
-      --vermillion: #a51d1f;
-      --vermillion-deep: #761113;
-      --gold: #a47a3b;
-      --connected: #2d6b4f;
-      --terminal: #7db89a;
-      --terminal-bg: #101814;
-      --shadow: 0 12px 32px rgba(45, 34, 22, 0.10);
-      --radius: 4px;
-      --font-ui: "Noto Sans SC", "PingFang SC", "Zen Kaku Gothic New", sans-serif;
-      --font-display: "Noto Serif SC", "Songti SC", "Shippori Mincho", serif;
-    }
-
     body {
       background:
         linear-gradient(rgba(255,255,255,.3), rgba(255,255,255,.3)),
@@ -1187,12 +1041,12 @@
     .brand-text h1 { color: #f0d8aa; letter-spacing: .015em; }
     .brand-vox { color: #f7eee0; font-size: .64em; margin-left: 8px; }
     .brand-kana { color: #bdb29f; letter-spacing: .11em; }
-    header .version-readout, header .manual-link, header .source-link, header select {
+    header .version-readout, header .manual-link, header select {
       color: #e9dfcd;
       background: #252720;
       border-color: rgba(233,223,205,.24);
     }
-    header .manual-link:hover, header .source-link:hover { color: #fff9ee; border-color: #caa36a; }
+    header .manual-link:hover { color: #fff9ee; border-color: #caa36a; }
     header select { background-color: #252720; }
 
     .panel {
@@ -1353,45 +1207,8 @@
       border: 0;
     }
 
-    @media (max-width: 820px) {
-      .sinovox-discrete-grid { grid-template-columns: 1fr; }
-      .voice-choice-grid { grid-template-columns: repeat(3, 1fr); }
-      .sinovox-pot-grid { grid-template-columns: repeat(3, 1fr); }
-      .pinyin-helper-grid { grid-template-columns: 1fr; }
-      .brand-vox { display: block; margin-left: 0; margin-top: 3px; }
-    }
-
-    @media (max-width: 560px) {
-      main { width: min(calc(100% - 20px), 1180px); padding-top: 10px; }
-      header { padding: 13px; }
-      .brand, .brand-text { min-width: 0; }
-      .brand-kana { max-width: 260px; overflow-wrap: anywhere; line-height: 1.5; }
-      .midi-settings-row { grid-template-columns: 1fr; }
-      .midi-settings-row > *, .midi-settings-row select { min-width: 0; width: 100%; }
-      .brand-seal { width: 48px; height: 48px; font-size: 17px; }
-      .voice-choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .voice-choice { min-width: 0; padding-inline: 6px; }
-      .voice-choice span { white-space: normal; overflow-wrap: anywhere; }
-      .sinovox-pot-grid { grid-template-columns: 1fr; }
-      .pinyin-helper-heading { align-items: flex-start; flex-direction: column; }
-      .pinyin-helper-grid, .pinyin-step { min-width: 0; }
-      .pot, .pot:first-child { border-left: 0; border-top: 1px solid var(--line); padding-top: 18px; }
-    }
     /* --- Reference-matched Sinovox console --- */
-    body:not(.skin-hal):not(.skin-wopr):not(.skin-moon):not(.skin-alien) {
-      --panel: rgba(251, 247, 239, .93);
-      --panel-solid: #fbf7ef;
-      --panel-soft: rgba(255, 253, 248, .68);
-      --ink: #241711;
-      --muted: #63564c;
-      --line: rgba(107, 74, 48, .22);
-      --line-strong: rgba(114, 26, 22, .54);
-      --vermillion: #9e1518;
-      --vermillion-deep: #771014;
-      --gold: #bf9b5b;
-      --connected: #4f8b5e;
-      background: #171a1b;
-    }
+    body { background: #171a1b; }
 
     body::before, body::after { display: none; }
     main {
@@ -1432,14 +1249,10 @@
     .brand-vox { color: #ead39f; font-size: .64em; letter-spacing: .08em; }
     .brand-kana { display: none; }
     .status-row { gap: 12px; color: #decda7; flex-wrap: nowrap; }
-    .header-device, .header-transport {
+    .header-transport {
       display: inline-flex; align-items: center; gap: 7px;
       color: #d8c8aa; font-family: Georgia, serif; font-size: 11px; white-space: nowrap;
     }
-    .header-device { color: #75b87c; }
-    .header-device.disconnected { color: #b9aa90; }
-    .header-device::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-    .header-transport i { color: #cfb778; }
     .version-readout { display: none; }
     .manual-link {
       min-height: 30px; padding: 4px 7px; border: 0; color: #d8c8aa;
@@ -1471,7 +1284,7 @@
     .connection-grid .field { display: grid; width: auto; margin: 0; gap: 3px; }
     .connection-grid .row { display: flex; gap: 5px; flex-wrap: wrap; }
     .connection-grid .row button { flex: 1 1 auto; }
-    .connection-grid .conn-label-row .dot, .connection-grid .conn-label-row .pseudo-label { display: none; }
+    .connection-grid .conn-label-row .pseudo-label { display: none; }
     .connection-grid .conn-readout, .connection-grid select { min-height: 30px; padding: 5px 8px; font-size: 11px; }
     .connection-grid button { min-height: 30px; padding: 5px 10px; font-size: 10px; }
     #serialIdentifyBtn, #serialRefreshBtn, #midiIdentifyBtn, #midiRefreshBtn, #serialDisconnectBtn { display: inline-flex; }
@@ -1546,14 +1359,10 @@
     .pot-widget canvas { width: 68px !important; height: 68px !important; }
     .pot-label { order: -1; margin-bottom: 1px; font-size: 13px; }
     .pot-map { display: none; }
-    .pot-value { min-width: 56px; margin-top: 0; padding: 2px 8px; border: 1px solid var(--line); background: rgba(255,255,255,.38); text-align: center; font-size: 10px; }
+    .pot-value { min-width: 56px; margin-top: 0; padding: 2px 8px; border: 1px solid transparent; background: #1c1917; color: #f3efe6; text-align: center; font-size: 10px; }
 
     #liveTab { position: relative; }
     .pinyin-helper { margin: 0 20px 8px; padding: 0; border: 1px solid var(--line); background: rgba(255,253,248,.72); }
-    .pinyin-helper:not([open]) { position: absolute; top: 9px; right: 166px; z-index: 3; margin: 0; border: 0; background: transparent; }
-    .pinyin-helper:not([open]) > summary { padding: 3px 7px; font-size: 10px; }
-    .pinyin-helper > summary { padding: 7px 10px; color: var(--vermillion); cursor: pointer; font: 700 12px/1 var(--font-display); list-style-position: inside; }
-    .pinyin-helper[open] > summary { border-bottom: 1px solid var(--line); }
     .pinyin-helper-body { padding: 10px; }
     .pinyin-helper-heading { display: none; }
     .pinyin-helper.pinyin-page { position: static; inset: auto; max-width: none; overflow: visible; white-space: normal; margin: 14px 20px; border: 1px solid var(--line); background: rgba(255,253,248,.72); }
@@ -1567,9 +1376,1906 @@
     #serialIncoming { min-height: 106px; max-height: 106px; padding: 8px 10px; color: #9bc5a6; border-color: #2b352f; border-radius: 4px; font-size: 10px; line-height: 1.32; }
     .monitor-note { color: var(--muted); font-size: 9px; }
 
+    /* =====================================================================
+       Vintage state-factory instrument.  Three materials, nothing else:
+         chassis   — near-black lacquered steel with a brass keyline
+         faceplate — warm ivory rice paper, for reading and typing
+         deck      — brushed brass-olive metal, for the hardware
+       ===================================================================== */
+
+    /* --- 1. Shell: backdrop, chassis, faceplate ------------------------- */
+
+    /* Vignetted studio backdrop. Kept on body (never html) and in the
+       background property (never a pseudo-element) so the print sheet's
+       `background: #fff !important` still flattens it. */
+    body {
+      background:
+        radial-gradient(ellipse 120% 80% at 50% -10%, rgba(74, 63, 46, 0.5) 0%, rgba(74, 63, 46, 0) 58%),
+        radial-gradient(ellipse 95% 75% at 50% 46%, #14110e 0%, #0a0807 56%, #030302 100%);
+    }
+
+    body::before,
+    body::after { display: none; }
+
+    /* The chassis itself. Padding is the visible reveal of lacquered steel
+       around the faceplate; the four corner screws are painted into the
+       background so no markup is needed. */
+    main {
+      /* Wide enough for the ten-bay deck to sit in one row: 10 bays plus the
+         gaps, the console's padding and the panel's. Below this the deck
+         stacks, so nothing has to be shrunk to fit. */
+      width: min(1252px, calc(100% - 44px));
+      margin: 30px auto 46px;
+      padding: 14px 14px 20px;
+      border-radius: 20px;
+      background:
+        var(--screw-slot), var(--screw-slot), var(--screw-slot), var(--screw-slot),
+        var(--screw-dome), var(--screw-dome), var(--screw-dome), var(--screw-dome),
+        linear-gradient(180deg, #3b3327 0%, #262019 10%, var(--lacquer-2) 26%, var(--lacquer) 62%, #191410 88%, #2e2820 100%);
+      background-repeat: no-repeat;
+      background-position:
+        left 2px top 2px, right 2px top 2px, left 2px bottom 8px, right 2px bottom 8px,
+        left 2px top 2px, right 2px top 2px, left 2px bottom 8px, right 2px bottom 8px,
+        0 0;
+      background-size:
+        11px 11px, 11px 11px, 11px 11px, 11px 11px,
+        11px 11px, 11px 11px, 11px 11px, 11px 11px,
+        auto;
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.14),
+        inset 0 -1px 0 rgba(239, 215, 154, 0.07),
+        0 0 0 1px #000,
+        0 34px 80px rgba(0, 0, 0, 0.62),
+        0 4px 14px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Faceplate: warm ivory rice paper, inside a brushed-brass keyline.
+       This is the only place the cloud texture lives now — it used to be a
+       `cover fixed` background on main, behind everything. */
+    main::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      bottom: 20px;
+      z-index: -1;
+      border-radius: 9px;
+      background:
+        linear-gradient(180deg, rgba(247, 240, 224, 0.93), rgba(231, 217, 189, 0.93)),
+        url("assets/rice-paper-clouds.png") center / cover no-repeat;
+      box-shadow:
+        0 0 0 1px rgba(200, 164, 92, 0.6),
+        0 0 0 2px rgba(0, 0, 0, 0.66),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 -40px 70px rgba(96, 68, 32, 0.10);
+    }
+
+    /* --- 2. Header ------------------------------------------------------ */
+
+    header {
+      min-height: 66px;
+      margin: 0;
+      padding: 11px 18px;
+      overflow: hidden;
+      border: 0;
+      border-bottom: 1px solid rgba(200, 164, 92, 0.45);
+      border-radius: 9px 9px 0 0;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, #262019 0%, #17130f 55%, #100d0b 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.16),
+        0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    header::after {
+      opacity: 1;
+      background: linear-gradient(180deg, rgba(239, 215, 154, 0.10), rgba(239, 215, 154, 0) 46%);
+      mask-image: none;
+    }
+
+    /* Red chop, vertical text, deliberately off-square. */
+    .brand-seal {
+      width: 44px;
+      height: 44px;
+      padding: 5px 3px;
+      border: 1px solid #e6b9a0;
+      border-radius: 3px;
+      color: #fbeada;
+      background: linear-gradient(158deg, #bb2320 0%, #971414 52%, #7c0f12 100%);
+      box-shadow:
+        inset 0 0 0 2px rgba(255, 238, 218, 0.22),
+        0 2px 6px rgba(0, 0, 0, 0.55);
+      font: 700 17px/1.05 var(--font-display);
+      letter-spacing: 0;
+      transform: rotate(-2deg);
+    }
+
+    /* Engraved brass wordmark. */
+    h1 {
+      color: #e6c98e;
+      font-family: var(--font-display);
+      font-size: 31px;
+      font-weight: 700;
+      letter-spacing: 0.035em;
+      background: linear-gradient(180deg, #fbecc4 0%, #dcbb79 46%, #a8863f 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.85)) drop-shadow(0 -1px 0 rgba(239, 215, 154, 0.10));
+    }
+
+    .brand-vox {
+      -webkit-text-fill-color: currentColor;
+      color: #c6ac7d;
+      font-size: 0.5em;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      margin-left: 10px;
+    }
+
+    .status-row { gap: 14px; }
+
+    /* The two legend plates become the panel's pilot lamps: one per transport,
+       lit when that transport is connected. This replaces the single combined
+       "device connected" chip, which could not say which of the two was up.
+
+       The state is read straight off the two dots the panels already carry —
+       the script toggles .connected on them — so no script or markup is
+       involved here. The dots themselves are hidden further down; these plates
+       are where they now live. */
+    .header-transport {
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 2px;
+      color: #857a5f;
+      background: linear-gradient(180deg, #2d2721, #1a1713);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.16),
+        inset 0 0 0 1px rgba(200, 164, 92, 0.26),
+        0 1px 2px rgba(0, 0, 0, 0.55);
+      font: 600 11px/1 var(--font-ui);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+      transition: color 0.2s ease;
+    }
+
+    /* The lamp replaces the glyph, so the plate reads lamp-then-legend and
+       nothing moves when it lights. */
+    .header-transport i { display: none; }
+
+    .header-transport::before {
+      content: "";
+      width: 11px;
+      height: 11px;
+      flex: none;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 36% 28%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 44%),
+        radial-gradient(circle at 50% 60%, #7d6f52 0%, #443c28 80%, #241f15 100%);
+      box-shadow:
+        0 0 0 2px #211d15,
+        0 0 0 3px rgba(200, 164, 92, 0.35),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.55);
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* Lit: green jewel, brighter legend. The icon each plate carries is what
+       tells the two apart, so it selects the plate even though it is hidden. */
+    main:has(#statusDot.connected) .header-transport:has(.fa-ethernet),
+    main:has(#midiStatusDot.connected) .header-transport:has(.fa-circle-nodes) {
+      color: #e7d7ac;
+    }
+
+    main:has(#statusDot.connected) .header-transport:has(.fa-ethernet)::before,
+    main:has(#midiStatusDot.connected) .header-transport:has(.fa-circle-nodes)::before {
+      background:
+        radial-gradient(circle at 36% 28%, #e8fff0 0%, rgba(232, 255, 240, 0) 44%),
+        radial-gradient(circle at 50% 60%, var(--jewel-green) 0%, #157a41 78%, #0a3d21 100%);
+      box-shadow:
+        0 0 0 2px #211d15,
+        0 0 0 3px rgba(200, 164, 92, 0.6),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.45),
+        0 0 10px rgba(79, 214, 126, 0.75);
+    }
+
+    /* Retired: the two lamps above say which transport is up, and this said
+       only that one of them was. */
+    #headerDeviceStatus { display: none; }
+
+    /* The panel dots are now the header lamps. They stay in the markup because
+       the script drives their .connected class, which is what the lamps read;
+       hiding them does not stop them matching. Their label rows hold nothing
+       else at this size, so the rows go with them. */
+    .connection-grid .conn-label-row { display: none; }
+
+    /* Brass push key. Renders at font-size 0 with a gear glyph in ::before. */
+    .manual-link {
+      justify-content: center;
+      width: 36px;
+      min-height: 32px;
+      padding: 0;
+      border: 0;
+      border-radius: 4px;
+      color: #241d12;
+      background: linear-gradient(180deg, #e8cb92 0%, #c2a05a 48%, #9c7c3c 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 248, 227, 0.62),
+        inset 0 -2px 4px rgba(70, 52, 22, 0.35),
+        0 2px 0 #4c3c1e,
+        0 4px 8px rgba(0, 0, 0, 0.5);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
+    }
+
+    .manual-link::before { font-size: 17px; }
+
+    .manual-link:hover {
+      color: #241d12;
+      background: linear-gradient(180deg, #f5dda9 0%, #d0af68 48%, #9c7c3c 100%);
+      border: 0;
+    }
+
+    .manual-link:active {
+      transform: translateY(2px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 248, 227, 0.4),
+        inset 0 2px 5px rgba(52, 38, 16, 0.5),
+        0 0 0 #4c3c1e,
+        0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    /* --- 3. Buttons: exactly two families ------------------------------- */
+
+    /* Secondary — flat brass-edged plate with engraved small caps. */
+    button {
+      border: 1px solid #7d6537;
+      border-radius: 4px;
+      color: #2c2418;
+      background: linear-gradient(180deg, #f1e8d1 0%, #ddd0b1 54%, #c8bb99 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -2px 3px rgba(120, 96, 52, 0.16),
+        0 1px 0 rgba(0, 0, 0, 0.32),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
+    }
+
+    button:hover:not(:disabled) {
+      color: #2c2418;
+      border-color: var(--brass);
+      background: linear-gradient(180deg, #fbf4e2 0%, #e8dcbf 54%, #d2c5a3 100%);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow:
+        inset 0 2px 4px rgba(90, 70, 34, 0.34),
+        0 0 0 rgba(0, 0, 0, 0);
+    }
+
+    /* Primary — chunky red bakelite key: specular top highlight, hard bottom
+       shadow, real travel on press. */
+    button.primary {
+      border: 1px solid #56090c;
+      border-radius: 5px;
+      color: #fff1e4;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.36) 0%, rgba(255, 255, 255, 0.07) 17%, rgba(255, 255, 255, 0) 44%),
+        linear-gradient(180deg, var(--bakelite-hi) 0%, var(--bakelite) 40%, #8e1216 76%, #7a1013 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 220, 210, 0.5),
+        inset 0 -4px 7px rgba(0, 0, 0, 0.36),
+        0 3px 0 var(--bakelite-lo),
+        0 6px 12px rgba(0, 0, 0, 0.44);
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    button.primary:hover:not(:disabled) {
+      color: #fff1e4;
+      border-color: #56090c;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.09) 17%, rgba(255, 255, 255, 0) 44%),
+        linear-gradient(180deg, #e04a45 0%, #bb2023 40%, #971418 76%, #7a1013 100%);
+    }
+
+    button.primary:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 220, 210, 0.24),
+        inset 0 3px 7px rgba(0, 0, 0, 0.5),
+        0 0 0 var(--bakelite-lo),
+        0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Disabled is a different material, not a dimmer one: flat grey-brown
+       moulded plastic. #speakBtn is disabled on load, so this is the first
+       thing anyone sees. */
+    button:disabled,
+    button.primary:disabled,
+    .tab-button:disabled,
+    .segment:disabled {
+      opacity: 1;
+      transform: none;
+      border: 1px solid #4a453a;
+      color: #9a927f;
+      background: #625b4e;
+      box-shadow: none;
+      text-shadow: none;
+    }
+
+    /* --- 4. Connection panel -------------------------------------------- */
+
+    .connection-panel {
+      padding: 14px 18px 16px;
+      border-bottom: 0;
+    }
+
+    .connection-unit + .connection-unit {
+      padding-left: 22px;
+      border-left: 1px solid rgba(120, 92, 48, 0.2);
+    }
+
+    /* Engraved brass strip heading. */
+    .connection-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 10px;
+      padding: 6px 11px;
+      border-radius: 3px;
+      color: #f2dfb2;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, var(--deck) 0%, var(--deck-2) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.2),
+        inset 0 0 0 1px rgba(200, 164, 92, 0.36),
+        0 1px 3px rgba(0, 0, 0, 0.32);
+      font: 700 13px/1.25 var(--font-display);
+      letter-spacing: 0.14em;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.75);
+    }
+
+    .connection-title i {
+      margin-right: 0;
+      color: var(--brass);
+    }
+
+    .connection-title small {
+      color: #b09872;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+    }
+
+    /* Inset ivory paper fields. */
+    .conn-readout {
+      border: 1px solid #ab9268;
+      border-radius: 3px;
+      color: #2a1c12;
+      background: linear-gradient(180deg, #ece0c4 0%, #f8f1de 62%, #f3ead4 100%);
+      box-shadow:
+        inset 0 2px 5px rgba(92, 68, 34, 0.3),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.65);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Both readouts carry tabindex="0". */
+    .conn-readout:focus {
+      outline: 2px solid var(--brass-hi);
+      outline-offset: 2px;
+    }
+
+    /* Inset fields with a small brass chevron. */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 26px;
+      border: 1px solid #ab9268;
+      border-radius: 3px;
+      color: #2a1c12;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--brass-dim) 50%),
+        linear-gradient(135deg, var(--brass-dim) 50%, transparent 50%),
+        linear-gradient(180deg, #ece0c4 0%, #f8f1de 62%, #f3ead4 100%);
+      background-position: calc(100% - 15px) center, calc(100% - 10px) center, 0 0;
+      background-size: 5px 5px, 5px 5px, auto;
+      background-repeat: no-repeat;
+      box-shadow:
+        inset 0 2px 5px rgba(92, 68, 34, 0.28),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+    }
+
+    select:disabled {
+      color: #8a8171;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #7d7767 50%),
+        linear-gradient(135deg, #7d7767 50%, transparent 50%),
+        linear-gradient(180deg, #b8b3a4, #c4bfae);
+      box-shadow: none;
+    }
+
+    /* Lit brass halo once a MIDI port is picked. */
+    #midiOutputPickWrap.midi-ready select {
+      border-color: var(--brass-hi);
+      box-shadow:
+        inset 0 2px 5px rgba(92, 68, 34, 0.2),
+        0 0 0 2px rgba(200, 164, 92, 0.5),
+        0 0 12px rgba(200, 164, 92, 0.6);
+    }
+
+    /* Small domed jewels in brass collars. */
+    .dot {
+      width: 12px;
+      height: 12px;
+      background:
+        radial-gradient(circle at 36% 28%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 46%),
+        radial-gradient(circle at 50% 62%, #7d1a16 0%, #300806 78%);
+      box-shadow:
+        0 0 0 2px #2a2419,
+        0 0 0 3px rgba(200, 164, 92, 0.5),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .dot.connected {
+      background:
+        radial-gradient(circle at 36% 28%, #e8fff0 0%, rgba(232, 255, 240, 0) 46%),
+        radial-gradient(circle at 50% 62%, var(--jewel-green) 0%, #157a41 78%);
+      box-shadow:
+        0 0 0 2px #2a2419,
+        0 0 0 3px rgba(200, 164, 92, 0.6),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.42),
+        0 0 10px rgba(79, 214, 126, 0.75);
+    }
+
+    .connection-grid .conn-readout,
+    .connection-grid select { min-height: 32px; font-size: 12px; }
+
+    /* Sized for the longer runtime strings ("Change port", "Disconnect MIDI")
+       so the row does not reflow when the labels swap. */
+    .connection-grid button { min-height: 32px; padding: 6px 9px; font-size: 11px; letter-spacing: 0.07em; }
+
+    .midi-channel-field label { font-size: 11px; }
+
+    /* Connecting hides the port picker and reveals a readout in its place, but
+       the two are siblings of the settings row rather than of each other: with
+       the picker gone the channel field slid into the wide column and the
+       readout dropped to a row of its own. Promoting the whole field to a
+       single grid fixes that — the picker and the readout share one cell, so
+       whichever is showing occupies the same slot, and the channel stays pinned
+       to the right column in both states. */
+    .connection-unit .field:has(> .midi-settings-row) {
+      grid-template-columns: minmax(0, 1fr) 86px;
+      gap: 8px 10px;
+      align-items: end;
+    }
+
+    .midi-settings-row { display: contents; }
+
+    .connection-unit .field:has(> .midi-settings-row) > .conn-label-row,
+    .connection-unit .field:has(> .midi-settings-row) > .dip-hint,
+    .connection-unit .field:has(> .midi-settings-row) > .conn-hint {
+      grid-column: 1 / -1;
+    }
+
+    #midiOutputPickWrap,
+    #midiOutputReadout {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .midi-channel-field {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    /* --- 5. Tab strip: piano keys on the deck --------------------------- */
+
+    .tab-strip {
+      min-height: 0;
+      gap: 5px;
+      padding: 10px 16px 0;
+      border-bottom: 3px solid var(--bakelite);
+      background:
+        var(--brushed),
+        linear-gradient(180deg, #35301f 0%, #262214 100%);
+      box-shadow: inset 0 1px 0 rgba(239, 215, 154, 0.14);
+    }
+
+    .tab-button {
+      flex: 1 1 0;
+      min-width: 0;
+      min-height: 40px;
+      margin-bottom: 0;
+      padding: 10px 12px;
+      border: 1px solid #7c6a3f;
+      border-bottom: 0;
+      border-radius: 5px 5px 0 0;
+      color: #2f2718;
+      background: linear-gradient(180deg, #f4ecd6 0%, #ded2b4 58%, #c7ba95 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.85),
+        0 3px 0 #6a5931,
+        0 6px 10px rgba(0, 0, 0, 0.42);
+      font: 700 14px/1 var(--font-display);
+      letter-spacing: 0.01em;
+      text-transform: none;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
+    }
+
+    .tab-button::before { color: var(--vermillion); }
+
+    .tab-button:hover:not(:disabled):not(.active) {
+      color: #2f2718;
+      border-color: var(--brass);
+      background: linear-gradient(180deg, #fdf7e8 0%, #e9dec3 58%, #d3c7a4 100%);
+    }
+
+    /* JS toggles .active — the key visibly sits lower. */
+    .tab-button.active {
+      transform: translateY(3px);
+      border-color: #56090c;
+      color: #ffeade;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 40%),
+        linear-gradient(180deg, #c22f2d 0%, var(--bakelite) 46%, #8a1216 100%);
+      box-shadow:
+        inset 0 2px 6px rgba(0, 0, 0, 0.5),
+        0 0 0 rgba(0, 0, 0, 0);
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .tab-button.active::before { color: inherit; }
+
+    .tab-button:disabled {
+      transform: translateY(3px);
+      border-bottom: 0;
+      color: #928a78;
+      background: #625b4e;
+      box-shadow: none;
+      text-shadow: none;
+    }
+
+    .tab-button:disabled::before { color: inherit; }
+
+    .tab-panel { padding-top: 0; }
+
+    /* --- 6. Speech deck ------------------------------------------------- */
+
+    .speech-panel {
+      grid-template-columns: minmax(0, 1fr) 172px;
+      gap: 20px;
+      padding: 16px 18px 18px;
+    }
+
+    .speech-main { display: flex; flex-direction: column; }
+
+    .speech-label-row { margin-bottom: 8px; }
+
+    .speech-label-row label {
+      padding: 4px 10px;
+      border-radius: 2px;
+      color: #f2dfb2;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, var(--deck) 0%, var(--deck-2) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.2),
+        inset 0 0 0 1px rgba(200, 164, 92, 0.34),
+        0 1px 3px rgba(0, 0, 0, 0.3);
+      font: 700 12px/1.3 var(--font-display);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.75);
+    }
+
+    /* Large inset writing field, pressed bezel, vermillion caret.
+       Height and resize:none are load-bearing for the layout. */
+    #speakText {
+      padding: 16px 18px;
+      border: 1px solid #9c8560;
+      border-radius: 4px;
+      color: #221409;
+      background: linear-gradient(180deg, #f0e5ca 0%, #f9f2e0 40%, #f1e7cf 100%);
+      box-shadow:
+        inset 0 3px 8px rgba(88, 62, 28, 0.32),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.6),
+        0 1px 0 rgba(255, 255, 255, 0.5);
+      caret-color: var(--vermillion);
+      font-family: var(--font-display);
+      font-size: 21px;
+      font-weight: 600;
+    }
+
+    #speakText:focus {
+      border-color: var(--brass-dim);
+      box-shadow:
+        inset 0 3px 8px rgba(88, 62, 28, 0.32),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.6),
+        0 0 0 3px rgba(200, 164, 92, 0.45);
+    }
+
+    /* Small engraved counter window. */
+    .speech-count {
+      align-self: flex-end;
+      display: inline-block;
+      margin-top: 8px;
+      padding: 3px 9px;
+      border-radius: 2px;
+      color: var(--amber);
+      background: linear-gradient(180deg, #100d0a, #211c14);
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.75),
+        0 0 0 1px rgba(200, 164, 92, 0.45);
+      font: 700 11px/1.2 var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.08em;
+      text-align: right;
+    }
+
+    .speech-actions { gap: 16px; }
+
+    .speech-actions button {
+      min-height: 82px;
+      font: 700 19px/1.15 var(--font-display);
+      letter-spacing: 0.02em;
+      text-transform: none;
+    }
+
+    /* Hero key: thick brass surround around the bakelite. */
+    .speech-actions #speakBtn {
+      border-radius: 7px;
+      box-shadow:
+        inset 0 2px 0 rgba(255, 224, 214, 0.45),
+        inset 0 -5px 9px rgba(0, 0, 0, 0.4),
+        0 0 0 4px #b28f4a,
+        0 0 0 5px #5f4a24,
+        0 7px 0 var(--bakelite-lo),
+        0 13px 22px rgba(0, 0, 0, 0.5);
+    }
+
+    .speech-actions #speakBtn:active:not(:disabled) {
+      transform: translateY(4px);
+      box-shadow:
+        inset 0 2px 6px rgba(0, 0, 0, 0.5),
+        0 0 0 4px #b28f4a,
+        0 0 0 5px #5f4a24,
+        0 3px 0 var(--bakelite-lo),
+        0 6px 12px rgba(0, 0, 0, 0.45);
+    }
+
+    .speech-actions #speakBtn:disabled {
+      border: 1px solid #4a453a;
+      background: #625b4e;
+      box-shadow: 0 0 0 4px #6f6553, 0 0 0 5px #4a4438;
+    }
+
+    /* Clearly subordinate. */
+    .speech-actions #clearBtn {
+      min-height: 54px;
+      border: 1px solid #7d6537;
+      color: #3a2c1c;
+      background: linear-gradient(180deg, #f1e8d1 0%, #ddd0b1 54%, #c8bb99 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 1px 0 rgba(0, 0, 0, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+      font-size: 15px;
+    }
+
+    /* --- 7. Control deck ------------------------------------------------ */
+
+    /* The vermillion pinstripe that separates ivory from metal, and the one
+       heavy divider above the control deck. */
+    .voice-panel {
+      padding: 14px 18px 18px;
+      border-top: 3px solid var(--bakelite);
+      border-bottom: 0;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, #221e15 0%, #1a1710 100%);
+      box-shadow: inset 0 1px 0 rgba(239, 215, 154, 0.12);
+    }
+
+    .voice-panel > .field { margin-bottom: 0; }
+
+    .voice-controls-heading { margin-bottom: 10px; }
+
+    .voice-controls-heading label {
+      color: #e9d5a4;
+      font: 700 13px/1 var(--font-display);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+    }
+
+    .voice-controls-heading::after { background: rgba(200, 164, 92, 0.22); }
+
+    /* Brushed brass-olive band with keylines and corner screws. */
+    /* Each column is an exact number of bays wide, so all ten bays come out
+       the same width instead of the language and knob groups being sized by
+       hand. align-items: start lines the bays up by their top edge — the knob
+       group has no title above it, so centring left it 10px high. */
+    .voice-console {
+      /* One circle for the whole deck. NexusUI fixes the knob canvas at 68px,
+         whose bezel is 76px, so the scale factor is the source of truth and the
+         diameter is derived from it: scale() needs a plain number and no calc
+         can turn a px diameter back into one. These live on the deck rather
+         than :root because a custom property that calls var() is substituted
+         where it is declared — declared at :root, a narrower breakpoint could
+         change the scale and the diameter would not follow. */
+      --disc-scale: 1.1842;
+      --disc-out: calc(76px * var(--disc-scale));
+      /* Engraved tick arc, clearing the brass by 6px. */
+      --arc: calc(var(--disc-out) + 12px);
+      grid-template-columns:
+        var(--bay-w)
+        calc(var(--bay-w) * 6 + var(--bay-gap) * 5)
+        calc(var(--bay-w) * 3 + var(--bay-gap) * 2);
+      align-items: start;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 0;
+      padding: 16px 14px;
+      border-radius: 7px;
+      background:
+        var(--screw-slot), var(--screw-slot), var(--screw-slot), var(--screw-slot),
+        var(--screw-dome), var(--screw-dome), var(--screw-dome), var(--screw-dome),
+        var(--brushed),
+        linear-gradient(180deg, #6d6446 0%, #58503a 32%, #494229 74%, #3d3826 100%);
+      background-repeat: no-repeat;
+      background-position:
+        left 5px top 5px, right 5px top 5px, left 5px bottom 5px, right 5px bottom 5px,
+        left 5px top 5px, right 5px top 5px, left 5px bottom 5px, right 5px bottom 5px,
+        0 0, 0 0;
+      background-size:
+        9px 9px, 9px 9px, 9px 9px, 9px 9px,
+        9px 9px, 9px 9px, 9px 9px, 9px 9px,
+        auto, auto;
+      box-shadow:
+        inset 0 0 0 1px rgba(239, 215, 154, 0.22),
+        inset 0 0 0 2px rgba(0, 0, 0, 0.55),
+        inset 0 2px 0 rgba(239, 215, 154, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.45);
+    }
+
+    .control-title {
+      margin: 0 0 8px 2px;
+      color: #e5d0a0;
+      font: 700 12px/1 var(--font-display);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+    }
+
+    /* Two-position brass rocker, active half depressed in red. The two keys are
+       stacked rather than side by side so the language selector is the same
+       rectangle as a portrait or knob bay. */
+    .segmented-control {
+      grid-template-columns: minmax(0, 1fr);
+      grid-auto-rows: 1fr;
+      min-height: var(--bay-h);
+      gap: 6px;
+      padding: 6px;
+      border: 1px solid #17140e;
+      border-radius: 5px;
+      background: linear-gradient(180deg, #1a1710, #2b2619);
+      box-shadow:
+        inset 0 2px 7px rgba(0, 0, 0, 0.7),
+        inset 0 0 0 1px rgba(239, 215, 154, 0.08),
+        0 1px 0 rgba(239, 215, 154, 0.14);
+    }
+
+    .segmented-control .segment {
+      min-height: 0;
+      padding: 6px 4px;
+      border: 1px solid #7d6537;
+      border-radius: 3px;
+      color: #2c2418;
+      background: linear-gradient(180deg, #ece2c8 0%, #d3c6a3 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.75),
+        0 2px 0 rgba(0, 0, 0, 0.5);
+      font: 700 11px/1.2 var(--font-ui);
+      letter-spacing: 0.04em;
+      text-transform: none;
+    }
+
+    .segment + .segment { margin-left: 0; }
+
+    .segmented-control .segment.active {
+      transform: translateY(2px);
+      border-color: #56090c;
+      color: #ffeade;
+      background: linear-gradient(180deg, #b8302d 0%, #98171a 55%, #7f1114 100%);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    /* Six framed portrait windows recessed into the brass. */
+    .voice-choice-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: var(--bay-gap);
+    }
+
+    .voice-choice {
+      position: relative;
+      min-height: var(--bay-h);
+      /* The medallion is the same circle as a knob: --disc-out across overall,
+         with the brass ring taking 3px of that on each side, and centred on the
+         deck's shared centre line. Image and ring both come off these, so they
+         cannot drift apart. */
+      --disc-ring: 3px;
+      --disc-d: calc(var(--disc-out) - var(--disc-ring) * 2);
+      padding: 8px 4px 4px;
+      gap: 6px;
+      border: 1px solid #17140e;
+      border-radius: 5px;
+      background: linear-gradient(180deg, #2b2719 0%, #1e1b12 100%);
+      box-shadow:
+        inset 0 2px 7px rgba(0, 0, 0, 0.7),
+        inset 0 0 0 1px rgba(239, 215, 154, 0.08),
+        0 1px 0 rgba(239, 215, 154, 0.14);
+      text-transform: none;
+      letter-spacing: 0;
+      text-shadow: none;
+      transition: box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    /* Brass cameo medallions in brass rings: the same turned blank as a knob
+       face, with the portrait engraved into it.
+
+       The six PNGs are transparent line art cut to the drawing, so the disc
+       below them is CSS and the ink sits straight on the metal. That is also
+       why there is no filter here any more: the old chain existed only to
+       re-ink linework that had been averaged to pencil-grey by squeezing a
+       mostly-empty 1254px sheet of paper into 84px. The art is now cropped to
+       the head and delivered at 320px, so the lines arrive dark and the paper
+       is simply gone. The paper originals are in git history.
+
+       The sheen is a conic gradient in brass values sampled off the knob
+       photograph, lit from the top left, so a portrait and a knob read as the
+       same metal under the same lamp. */
+    .voice-choice img {
+      width: var(--disc-d);
+      height: var(--disc-d);
+      /* 9px = the bay's 1px border plus its 8px top padding. */
+      margin: calc(var(--disc-cy) - var(--disc-d) / 2 - 9px) auto 0;
+      border: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 36% 22%, rgba(255, 247, 219, 0.5) 0%, rgba(255, 247, 219, 0) 54%),
+        radial-gradient(circle at 50% 106%, rgba(48, 35, 13, 0.5) 0%, rgba(48, 35, 13, 0) 44%),
+        conic-gradient(from 202deg,
+          #8a6d38 0deg, #c9a862 46deg, #94773e 96deg, #dcbe7e 148deg,
+          #8b6e39 200deg, #c6a561 252deg, #916f39 306deg, #8a6d38 360deg);
+      box-shadow: none;
+      /* Hover and selection light the medallion rather than recolour it, which
+         is one declaration instead of a second gradient stack, and unlike a
+         gradient it can actually animate. */
+      filter: brightness(0.97) saturate(0.98);
+      transition: filter 0.2s ease;
+    }
+
+    /* The ring is drawn by the bay rather than by the image, so it can overlap
+       the disc edge and cast its shadow onto the deck. */
+    .voice-choice { justify-content: flex-start; }
+
+    .voice-choice::before {
+      content: "";
+      position: absolute;
+      top: calc(var(--disc-cy) - var(--disc-out) / 2 - 1px);
+      left: 50%;
+      box-sizing: border-box;
+      width: var(--disc-out);
+      height: var(--disc-out);
+      margin-left: calc(var(--disc-out) / -2);
+      border: var(--disc-ring) solid var(--brass-dim);
+      border-radius: 50%;
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.45),
+        0 2px 5px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* Engraved brass nameplate, taken out of flow and pinned to the same band
+       as a knob's nameplate so the two run across the deck as one line. */
+    .voice-choice strong {
+      position: absolute;
+      /* less the bay's 1px border, which a knob bay does not have */
+      top: calc(var(--plate-t) - 1px);
+      left: 4px;
+      right: 4px;
+      height: var(--plate-h);
+      border-radius: 2px;
+      color: #f2e2b6;
+      background: linear-gradient(180deg, #5b4f2d 0%, #3a3220 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.28),
+        0 1px 2px rgba(0, 0, 0, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: 700 11px/1.3 var(--font-ui);
+      letter-spacing: 0.02em;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* The speaker number, in the same counter window a knob uses for its
+       value. It was already in the markup for screen readers and hidden; shown
+       here it finishes the bay on the deck's bottom band. */
+    .voice-choice span {
+      display: flex;
+      position: absolute;
+      top: calc(var(--num-t) - 1px);
+      left: 4px;
+      right: 4px;
+      height: var(--num-h);
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(200, 164, 92, 0.5);
+      border-radius: 2px;
+      color: var(--amber);
+      background: linear-gradient(180deg, #0e0c09 0%, #1c1917 100%);
+      box-shadow:
+        inset 0 2px 5px rgba(0, 0, 0, 0.85),
+        0 1px 0 rgba(239, 215, 154, 0.12);
+      font: 700 10px/1 var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-shadow: 0 0 7px rgba(255, 181, 74, 0.5);
+    }
+
+    .voice-choice:hover:not(:disabled) {
+      border-color: #6d5a30;
+      color: inherit;
+      background: linear-gradient(180deg, #332e1d 0%, #232014 100%);
+    }
+
+    .voice-choice:hover:not(:disabled)::before { border-color: var(--brass); }
+
+    .voice-choice:hover:not(:disabled) img {
+      filter: brightness(1.05) saturate(1.04);
+    }
+
+    /* Lit from behind, with a red jewel pip. */
+    .voice-choice.active {
+      border-color: var(--brass);
+      color: inherit;
+      background:
+        radial-gradient(ellipse 78% 62% at 50% 36%, rgba(255, 197, 122, 0.30) 0%, rgba(255, 197, 122, 0) 70%),
+        linear-gradient(180deg, #423922 0%, #2c2617 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(239, 215, 154, 0.42),
+        inset 0 0 20px rgba(255, 176, 88, 0.26),
+        0 0 14px rgba(200, 164, 92, 0.4);
+    }
+
+    /* The selected face differs by frame and lamplight, never by hiding:
+       a vermillion ring inside a brass halo, and a warmer, brighter paper. */
+    .voice-choice.active::before {
+      border-color: #c0322e;
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(200, 164, 92, 0.9),
+        0 0 12px rgba(255, 186, 104, 0.5);
+    }
+
+    .voice-choice.active img {
+      filter: brightness(1.13) saturate(1.12);
+    }
+
+    .voice-choice.active strong {
+      color: #fdeec6;
+      background: linear-gradient(180deg, #7a683a 0%, #4d4227 100%);
+    }
+
+    .voice-choice.active span {
+      border-color: rgba(200, 164, 92, 0.8);
+      color: #ffc978;
+      text-shadow: 0 0 9px rgba(255, 181, 74, 0.8);
+    }
+
+    .voice-choice.active::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 34% 30%, #ff9c85 0%, var(--jewel-red) 68%, #6d1210 100%);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.55),
+        0 0 7px rgba(212, 59, 57, 0.9);
+    }
+
+    /* Knob bays: recessed wells, brass bezel rings, engraved tick arcs. */
+    /* The knob group carries no title, so it is pushed down by the height of
+       one to keep its bays level with the portrait and language bays. */
+    .sinovox-pot-grid { gap: var(--bay-gap); margin-top: 20px; }
+
+    /* Knob, nameplate and counter are each pinned to a deck token rather than
+       stacked with padding and gaps. That is what lets a knob bay and a
+       portrait bay stay on the same lines at every breakpoint: change the
+       token and both move together. */
+    .pot,
+    .pot:first-child {
+      min-height: var(--bay-h);
+      padding: 0;
+      gap: 0;
+      border: 0;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #363021 0%, #272316 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.16),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.5),
+        0 1px 0 rgba(239, 215, 154, 0.07);
+    }
+
+    /* 11 engraved ticks over the dial's 270 degree sweep, plus a vermillion
+       index at top dead centre. Does not scale with the knob, so it stays
+       clear of the neighbouring bays. */
+    .pot::before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: calc(var(--disc-cy) - var(--arc) / 2);
+      left: 50%;
+      width: var(--arc);
+      height: var(--arc);
+      margin-left: calc(var(--arc) / -2);
+      border-radius: 50%;
+      opacity: 1;
+      background:
+        conic-gradient(from -2.2deg, #ec4b3e 0deg 4.4deg, rgba(0, 0, 0, 0) 4.4deg),
+        repeating-conic-gradient(from 225deg, rgba(248, 232, 194, 0.92) 0deg 1.8deg, rgba(0, 0, 0, 0) 1.8deg 27deg);
+      -webkit-mask-image:
+        radial-gradient(circle,
+          transparent 0 calc(var(--disc-out) / 2 + 1px),
+          #000 calc(var(--disc-out) / 2 + 1px) calc(var(--disc-out) / 2 + 6px),
+          transparent calc(var(--disc-out) / 2 + 6.5px)),
+        conic-gradient(from 224deg, #000 0deg 272deg, transparent 272deg);
+      mask-image:
+        radial-gradient(circle,
+          transparent 0 calc(var(--disc-out) / 2 + 1px),
+          #000 calc(var(--disc-out) / 2 + 1px) calc(var(--disc-out) / 2 + 6px),
+          transparent calc(var(--disc-out) / 2 + 6.5px)),
+        conic-gradient(from 224deg, #000 0deg 272deg, transparent 272deg);
+      -webkit-mask-composite: source-in;
+      mask-composite: intersect;
+    }
+
+    /* The visible knob is scaled rather than resized: NexusUI hard-codes the
+       canvas at 68px, and because the overlay is a child it scales with the
+       face, so hit-testing still lands on the same pixels. The factor is
+       whatever makes the bezel exactly --disc-out across (76px is the bezel at
+       1x), which is how a knob and a portrait end up the same circle. Scaling
+       is about the centre, so the centre stays on --disc-cy. */
+    .knob-shell {
+      position: absolute;
+      top: calc(var(--disc-cy) - 34px);
+      left: 50%;
+      margin: 0 0 0 -34px;
+      transform: scale(var(--disc-scale));
+    }
+
+    /* Brass bezel ring, sitting behind the face image. */
+    .knob-shell::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(from 212deg,
+          #4b3b1a 0deg, #d6b471 44deg, #7d6531 92deg, var(--brass-hi) 146deg,
+          #6f5a2b 200deg, var(--brass) 256deg, #5a4720 312deg, #4b3b1a 360deg);
+      box-shadow:
+        inset 0 0 0 2px rgba(0, 0, 0, 0.6),
+        0 1px 0 rgba(239, 215, 154, 0.22),
+        0 3px 7px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Recessed well the bezel drops into. */
+    .knob-shell::after {
+      content: "";
+      position: absolute;
+      inset: -14px;
+      z-index: -1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.5) 0 66%, rgba(0, 0, 0, 0) 72%);
+      box-shadow:
+        inset 0 3px 7px rgba(0, 0, 0, 0.6),
+        inset 0 -2px 3px rgba(239, 215, 154, 0.12);
+    }
+
+    /* brass-knob.png carries a cream margin around the disc, which read as a
+       porcelain ring. Oversize the image and clip back to 68px so the brass
+       fills the bay. The clip is a centred circle, so the JS-driven
+       rotate(var(--knob-angle)) — which must survive — is unaffected. */
+    .knob-face {
+      inset: -28px;
+      width: 124px;
+      height: 124px;
+      clip-path: circle(34px at 62px 62px);
+      transform: rotate(var(--knob-angle, 0deg));
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6)) saturate(1.14) contrast(1.05);
+    }
+
+    /* Engraved bilingual nameplate, below the knob as on the reference. */
+    .pot-label {
+      position: absolute;
+      top: var(--plate-t);
+      left: 4px;
+      right: 4px;
+      height: var(--plate-h);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* the Chinese prefix is a pseudo-element, so it is a flex sibling of the
+         Latin name and needs a gap rather than a trailing space */
+      gap: 0.32em;
+      padding: 0 4px;
+      border-radius: 2px;
+      color: #f2e2b6;
+      background: linear-gradient(180deg, #5b4f2d 0%, #3a3220 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.28),
+        0 1px 2px rgba(0, 0, 0, 0.55);
+      font: 700 11px/1.3 var(--font-ui);
+      letter-spacing: 0.1em;
+      text-align: center;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+    }
+
+    .sinovox-pot-grid .pot:nth-child(1) .pot-label::before { content: "音高 "; }
+    .sinovox-pot-grid .pot:nth-child(2) .pot-label::before { content: "语速 "; }
+    .sinovox-pot-grid .pot:nth-child(3) .pot-label::before { content: "音量 "; }
+
+    .pot-label::before {
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    /* Dark counter window with warm amber tabular numerals. */
+    .pot-value {
+      position: absolute;
+      top: var(--num-t);
+      left: 4px;
+      right: 4px;
+      height: var(--num-h);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      padding: 0 6px;
+      border: 1px solid rgba(200, 164, 92, 0.5);
+      border-radius: 2px;
+      color: var(--amber);
+      background: linear-gradient(180deg, #0e0c09 0%, #1c1917 100%);
+      box-shadow:
+        inset 0 2px 5px rgba(0, 0, 0, 0.85),
+        0 1px 0 rgba(239, 215, 154, 0.12);
+      font: 700 13px/1.3 var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 7px rgba(255, 181, 74, 0.55);
+    }
+
+    /* --- 8. Serial monitor: phosphor CRT behind a brass bezel ----------- */
+
+    .monitor-panel {
+      padding: 16px 18px 18px;
+      border-top: 3px solid rgba(200, 164, 92, 0.55);
+      border-radius: 0 0 9px 9px;
+      background: linear-gradient(180deg, #1c1811 0%, #141109 100%);
+      box-shadow: inset 0 1px 0 rgba(239, 215, 154, 0.12);
+    }
+
+    .monitor-panel > .field { margin-bottom: 0; }
+
+    .monitor-heading { margin-bottom: 10px; }
+
+    .monitor-heading label {
+      padding: 4px 10px;
+      border-radius: 2px;
+      color: #f2dfb2;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, var(--deck) 0%, var(--deck-2) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.2),
+        inset 0 0 0 1px rgba(200, 164, 92, 0.34),
+        0 1px 3px rgba(0, 0, 0, 0.4);
+      font: 700 12px/1.3 var(--font-display);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.75);
+    }
+
+    .monitor-note {
+      color: #8d8570;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Deeply recessed screen: scanlines, vignette, faint glow.
+       white-space: pre-wrap and the fixed height stay as they were. */
+    #serialIncoming {
+      padding: 12px 14px;
+      border: 0;
+      border-radius: 9px;
+      color: var(--phosphor);
+      background:
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.38) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+        radial-gradient(ellipse 82% 76% at 50% 44%, #20382a 0%, #102019 58%, #060c08 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.9),
+        inset 0 5px 16px rgba(0, 0, 0, 0.85),
+        inset 0 -4px 12px rgba(0, 0, 0, 0.7),
+        0 0 0 3px #6e5a2f,
+        0 0 0 4px #2a2419,
+        0 6px 14px rgba(0, 0, 0, 0.55);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      line-height: 1.5;
+      text-shadow: 0 0 7px rgba(134, 219, 166, 0.55);
+    }
+
+    /* --- 9. Shared: focus, labels, fields on the faceplate -------------- */
+
+    label {
+      color: #4d3d2c;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+    }
+
+    textarea,
+    .slot-input {
+      border: 1px solid #ab9268;
+      border-radius: 3px;
+      background: linear-gradient(180deg, #ece0c4 0%, #f8f1de 62%, #f3ead4 100%);
+      box-shadow:
+        inset 0 2px 5px rgba(92, 68, 34, 0.26),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    textarea:focus,
+    select:focus,
+    .slot-input:focus {
+      border-color: var(--brass-dim);
+      box-shadow:
+        inset 0 2px 5px rgba(92, 68, 34, 0.26),
+        0 0 0 3px rgba(200, 164, 92, 0.45);
+    }
+
+    :where(button, a, select, textarea, [tabindex]):focus-visible {
+      outline: 2px solid var(--brass-hi);
+      outline-offset: 2px;
+    }
+
+    .bulk-dump-hint,
+    .slot-status { font-size: 11px; }
+
+    /* --- 10. Pinyin converter: a paper leaf inset in the chassis -------- */
+
+    /* The whole tab is one ivory rice-paper card behind a brass keyline,
+       matching the faceplate treatment on main::before. */
+    .pinyin-helper.pinyin-page {
+      margin: 14px 20px 18px;
+      padding: 0;
+      border: 1px solid #6f5a30;
+      border-radius: 6px;
+      background:
+        linear-gradient(180deg, rgba(249, 242, 226, 0.95) 0%, rgba(233, 220, 193, 0.95) 100%),
+        url("assets/rice-paper-clouds.png") center / cover no-repeat;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 0 0 1px rgba(200, 164, 92, 0.4),
+        inset 0 -34px 60px rgba(96, 68, 32, 0.09),
+        0 2px 7px rgba(0, 0, 0, 0.34);
+    }
+
+    .pinyin-page .pinyin-helper-body { padding: 14px 16px 16px; }
+
+    /* Engraved brass header rail, bilingual like the knob nameplates. */
+    .pinyin-page .pinyin-helper-heading {
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      border-radius: 3px;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, var(--deck) 0%, var(--deck-2) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.2),
+        inset 0 0 0 1px rgba(200, 164, 92, 0.36),
+        0 1px 3px rgba(0, 0, 0, 0.32);
+    }
+
+    #pinyinHelperTitle {
+      color: #f3e1b4;
+      font: 700 16px/1.3 var(--font-display);
+      letter-spacing: 0.1em;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+    }
+
+    #pinyinHelperTitle::before {
+      content: "拼音转换 · ";
+      color: var(--brass);
+      letter-spacing: 0.04em;
+    }
+
+    .pinyin-page .pinyin-helper-heading span {
+      color: #b09872;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+    }
+
+    /* Three paper cards on the leaf. */
+    .pinyin-page .pinyin-helper-grid { gap: 13px; }
+
+    .pinyin-page .pinyin-step {
+      padding: 12px 12px 13px;
+      border: 1px solid #b09a70;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #fbf5e6 0%, #f0e6cd 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.85),
+        0 1px 2px rgba(0, 0, 0, 0.18);
+    }
+
+    .pinyin-page .pinyin-step label {
+      color: #4a3927;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    /* Stamped red enamel disc with an engraved numeral. */
+    .pinyin-page .pinyin-step-number {
+      width: 22px;
+      height: 22px;
+      margin-right: 8px;
+      color: #ffe6d6;
+      background:
+        radial-gradient(circle at 36% 26%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 48%),
+        linear-gradient(180deg, var(--bakelite-hi) 0%, var(--bakelite) 46%, #7c1013 100%);
+      box-shadow:
+        inset 0 -2px 4px rgba(0, 0, 0, 0.42),
+        0 0 0 1px #57090c,
+        0 1px 2px rgba(0, 0, 0, 0.42);
+      font: 700 12px/1 var(--font-display);
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.55);
+    }
+
+    /* Inset paper fields for the two editable steps. */
+    #pinyinEnglish,
+    #pinyinChinese {
+      min-height: 92px;
+      padding: 10px 11px;
+      border: 1px solid #a08a62;
+      border-radius: 3px;
+      background: linear-gradient(180deg, #eadfc2 0%, #faf3e2 55%, #f2e9d2 100%);
+      box-shadow:
+        inset 0 2px 6px rgba(88, 62, 28, 0.28),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+      font-family: var(--font-display);
+      font-size: 14px;
+    }
+
+    /* Step 3 is machine output, not handwriting: ruled tape, mono, spaced. */
+    #pinyinResult {
+      min-height: 92px;
+      padding: 10px 11px;
+      border: 1px solid #7d6a48;
+      border-radius: 3px;
+      color: #2a1a0d;
+      background:
+        repeating-linear-gradient(180deg, rgba(120, 92, 44, 0.16) 0 1px, rgba(0, 0, 0, 0) 1px 19px),
+        linear-gradient(180deg, #e6d9b6 0%, #f2e8cb 100%);
+      box-shadow:
+        inset 0 2px 6px rgba(88, 62, 28, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+      font: 600 12.5px/19px var(--font-mono);
+      letter-spacing: 0.06em;
+      word-spacing: 0.12em;
+    }
+
+    /* Engraved status line with its own indicator lamp. */
+    #pinyinHelperStatus {
+      position: relative;
+      margin: 13px 0 0;
+      padding: 8px 12px 8px 30px;
+      border-radius: 3px;
+      color: #574734;
+      background: linear-gradient(180deg, rgba(255, 252, 244, 0.6) 0%, rgba(234, 223, 198, 0.6) 100%);
+      box-shadow: inset 0 0 0 1px rgba(120, 92, 48, 0.24);
+      font-size: 11.5px;
+      letter-spacing: 0.03em;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+
+    #pinyinHelperStatus::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 11px;
+      width: 9px;
+      height: 9px;
+      margin-top: -5px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 34% 30%, #6a6153 0%, #3a352c 66%, #1d1a15 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(120, 92, 48, 0.55);
+    }
+
+    #pinyinHelperStatus.error {
+      color: #7c1114;
+      background: linear-gradient(180deg, rgba(255, 244, 238, 0.72) 0%, rgba(240, 214, 206, 0.72) 100%);
+      box-shadow: inset 0 0 0 1px rgba(158, 21, 24, 0.35);
+    }
+
+    #pinyinHelperStatus.error::before {
+      background: radial-gradient(circle at 34% 30%, #ff9c85 0%, var(--jewel-red) 66%, #6d1210 100%);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.45),
+        0 0 8px rgba(212, 59, 57, 0.95);
+    }
+
+    #pinyinHelperStatus.success {
+      color: #2b5738;
+      background: linear-gradient(180deg, rgba(246, 252, 244, 0.72) 0%, rgba(217, 233, 216, 0.72) 100%);
+      box-shadow: inset 0 0 0 1px rgba(79, 139, 94, 0.4);
+    }
+
+    #pinyinHelperStatus.success::before {
+      background: radial-gradient(circle at 34% 30%, #d3ffe0 0%, var(--jewel-green) 62%, #14562c 100%);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.45),
+        0 0 8px rgba(79, 214, 126, 0.85);
+    }
+
+    /* --- 11. Sentence banks: brass rails over a ledger tray ------------- */
+
+    .bank-header {
+      gap: 9px 12px;
+      margin-bottom: 12px;
+      padding: 8px 11px;
+      border-bottom: 0;
+      border-radius: 4px;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, var(--deck) 0%, var(--deck-2) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.2),
+        inset 0 0 0 1px rgba(200, 164, 92, 0.36),
+        0 2px 5px rgba(0, 0, 0, 0.34);
+    }
+
+    /* Engraved bank plate. Height is deliberately unconstrained: the FRAM
+       string carries three clauses and must be allowed to wrap. */
+    .bank-info {
+      flex: 1 1 250px;
+      min-width: 0;
+      padding: 5px 10px;
+      border-radius: 2px;
+      color: var(--brass-hi);
+      background: linear-gradient(180deg, #201b12 0%, #14100b 100%);
+      box-shadow:
+        inset 0 2px 5px rgba(0, 0, 0, 0.75),
+        0 1px 0 rgba(239, 215, 154, 0.14);
+      font: 700 11px/1.5 var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 7px rgba(255, 181, 74, 0.22);
+      overflow-wrap: anywhere;
+    }
+
+    /* Recessed ivory block with its own brass label rail across the top. */
+    .bulk-dump-panel {
+      gap: 10px;
+      padding: 0 0 12px;
+      border: 1px solid #6f5a30;
+      border-radius: 4px;
+      background: linear-gradient(180deg, rgba(246, 239, 222, 0.94) 0%, rgba(230, 217, 189, 0.94) 100%);
+      box-shadow:
+        inset 0 2px 7px rgba(88, 62, 28, 0.22),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+        0 1px 3px rgba(0, 0, 0, 0.28);
+    }
+
+    .bulk-dump-panel > label {
+      margin: 0;
+      padding: 6px 12px;
+      border-radius: 3px 3px 0 0;
+      color: #f2dfb2;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, var(--deck) 0%, var(--deck-2) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.2),
+        0 1px 3px rgba(0, 0, 0, 0.32);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.72);
+    }
+
+    .bulk-dump-panel textarea,
+    .bulk-dump-panel > .row { margin: 0 12px; }
+
+    .bulk-dump-panel textarea {
+      min-height: 84px;
+      padding: 9px 11px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .bulk-dump-hint {
+      color: #5d4c37;
+      font: 700 10px/1.4 var(--font-ui);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    /* The tray. Row backgrounds are deliberately translucent so the pressed
+       inner bezel still reads under a long FRAM list. */
+    .slot-list {
+      border: 1px solid #6f5a30;
+      border-radius: 4px;
+      background: linear-gradient(180deg, rgba(243, 235, 215, 0.95) 0%, rgba(231, 220, 195, 0.95) 100%);
+      box-shadow:
+        inset 0 3px 9px rgba(76, 54, 24, 0.34),
+        inset 0 -3px 9px rgba(76, 54, 24, 0.24),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.32),
+        0 1px 3px rgba(0, 0, 0, 0.3);
+      scrollbar-width: thin;
+      scrollbar-color: #8a6f3c rgba(60, 46, 22, 0.16);
+    }
+
+    /* Empty tray: a dashed engraved rule with a centred message plate. The
+       plate is a pseudo-element behind the text, which is why the tray
+       isolates — z-index: -1 must stop at the tray, not fall through it. */
+    .bank-empty {
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 116px;
+      margin: 0;
+      padding: 30px 34px;
+      border: 0;
+      color: #5d4c37;
+      background:
+        repeating-linear-gradient(180deg, rgba(120, 92, 44, 0.08) 0 1px, rgba(0, 0, 0, 0) 1px 22px);
+      font: 600 12px/1.55 var(--font-ui);
+      letter-spacing: 0.05em;
+      text-align: center;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+
+    .bank-empty::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 18px 22px;
+      border: 1px dashed rgba(120, 92, 48, 0.6);
+      border-radius: 3px;
+      background: linear-gradient(180deg, rgba(252, 246, 233, 0.9) 0%, rgba(238, 228, 205, 0.9) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 1px 3px rgba(76, 54, 24, 0.18);
+    }
+
+    /* --- 12. Slot rows (built only by renderSlotList) ------------------- */
+
+    /* A factory log-sheet line: faint alternating banding, hairline rules,
+       a stamped index block, a ruled paper field and a small key frame. */
+    .slot-row {
+      grid-template-columns: 138px minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 7px 11px;
+      border-top: 1px solid rgba(120, 92, 48, 0.26);
+      background: rgba(255, 252, 242, 0.3);
+    }
+
+    .slot-row:nth-child(even) { background: rgba(118, 90, 42, 0.075); }
+
+    .slot-row:hover { background: rgba(255, 247, 226, 0.62); }
+
+    /* Unsaved edits: a red-inked margin bar and a warm paper tint. Written
+       in plain rgba rather than color-mix on --vermillion, which the retuned
+       tokens left far too faint to notice. */
+    .slot-row.modified,
+    .slot-row.modified:hover {
+      background:
+        linear-gradient(90deg, rgba(168, 24, 28, 0.17) 0%, rgba(168, 24, 28, 0.085) 22%, rgba(168, 24, 28, 0.06) 100%);
+      box-shadow:
+        inset 5px 0 0 var(--bakelite),
+        inset 0 0 0 1px rgba(168, 24, 28, 0.16);
+    }
+
+    .slot-badge {
+      gap: 1px;
+      padding: 4px 8px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, rgba(255, 253, 246, 0.72) 0%, rgba(234, 223, 197, 0.72) 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(120, 92, 48, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    /* Covers the note-name legend and the FRAM "no MIDI trigger" span, which
+       arrives with an inline opacity: 0.75 — hence the near-ink colour, so it
+       still reads once that 25% is taken off it. */
+    .slot-badge span {
+      color: #453623;
+      font: 600 10px/1.35 var(--font-ui);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.05em;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .slot-badge .slot-index {
+      color: #1d1209;
+      font: 700 13px/1.25 var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.04em;
+    }
+
+    .slot-badge .slot-status {
+      min-height: 12px;
+      color: #6b5a43;
+      font: 700 9px/1.35 var(--font-ui);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .slot-badge .slot-status.error {
+      color: #8c1215;
+      text-shadow:
+        0 0 7px rgba(212, 59, 57, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    /* Inset paper field with a single rule under the writing line. */
+    .slot-input {
+      padding: 7px 10px 8px;
+      border: 1px solid #a89066;
+      border-radius: 2px;
+      background:
+        linear-gradient(rgba(120, 92, 44, 0.4), rgba(120, 92, 44, 0.4)) no-repeat 10px calc(100% - 7px) / calc(100% - 20px) 1px,
+        linear-gradient(180deg, #eadfc2 0%, #faf3e2 58%, #f2e9d2 100%);
+      box-shadow:
+        inset 0 2px 5px rgba(92, 68, 34, 0.26),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+      font-size: 13px;
+    }
+
+    /* Three small keys in one brass frame; Save is the red bakelite one. */
+    .slot-actions {
+      gap: 3px;
+      padding: 3px;
+      border-radius: 4px;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, #55491f 0%, #302913 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.24),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.45),
+        0 1px 2px rgba(0, 0, 0, 0.35);
+    }
+
+    .slot-actions button {
+      min-width: 46px;
+      padding: 5px 8px;
+      border-radius: 2px;
+      font-size: 10px;
+      letter-spacing: 0.09em;
+    }
+
+    .slot-actions button.primary {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 220, 210, 0.45),
+        inset 0 -3px 5px rgba(0, 0, 0, 0.34),
+        0 2px 0 var(--bakelite-lo),
+        0 3px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .slot-actions button.primary:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 220, 210, 0.24),
+        inset 0 2px 5px rgba(0, 0, 0, 0.5),
+        0 0 0 var(--bakelite-lo),
+        0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    /* --- 13. MIDI reference sheet (screen only) ------------------------- */
+
+    /* Aged buff paper, bound down the left edge in red. The @media print
+       block above outranks all of this with #midiRefPanel * !important, so
+       the printed sheet stays plain black on white. */
+    main .panel.midi-ref-vintage {
+      margin: 14px 20px 18px;
+      padding: 15px 18px 17px;
+      border: 1px solid #b09a70;
+      border-left: 6px solid var(--bakelite);
+      border-radius: 3px;
+      color: #241a10;
+      background:
+        repeating-linear-gradient(90deg, rgba(120, 92, 44, 0.035) 0 2px, rgba(0, 0, 0, 0) 2px 4px),
+        linear-gradient(180deg, #f5ecd8 0%, #eadec2 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        inset 7px 0 14px rgba(120, 92, 44, 0.18),
+        0 2px 8px rgba(0, 0, 0, 0.34);
+    }
+
+    /* Brass key rail. The wrapper carries an inline margin-bottom, so only
+       the inside of the rail is styled here. */
+    .midi-ref-vintage .no-print.row {
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 4px;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, var(--deck) 0%, var(--deck-2) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.2),
+        inset 0 0 0 1px rgba(200, 164, 92, 0.36),
+        0 1px 3px rgba(0, 0, 0, 0.32);
+    }
+
+    .midi-ref-vintage .midi-ref-head {
+      padding-bottom: 11px;
+      margin-bottom: 14px;
+      border-bottom: 2px solid rgba(120, 92, 44, 0.5);
+    }
+
+    .midi-ref-vintage .midi-ref-title {
+      color: var(--vermillion-deep);
+      font-size: 21px;
+      letter-spacing: 0.16em;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    /* Several of the generated subtitles carry an inline color:#333 that no
+       ordinary selector can reach, so this one is important on purpose. The
+       print rule is scoped by #midiRefPanel and still wins over it. */
+    .midi-ref-vintage .midi-ref-sub {
+      color: #59492f !important;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .midi-ref-vintage .midi-ref-block-title {
+      padding: 5px 10px;
+      border-bottom: 0;
+      border-radius: 2px;
+      color: #f3e1b4;
+      background:
+        var(--brushed),
+        linear-gradient(180deg, var(--deck) 0%, var(--deck-2) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(239, 215, 154, 0.2),
+        0 1px 3px rgba(0, 0, 0, 0.3);
+      font-size: 12px;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+    }
+
+    .midi-ref-vintage table {
+      border: 1px solid rgba(90, 68, 32, 0.55);
+      background: rgba(255, 252, 244, 0.4);
+    }
+
+    .midi-ref-vintage th,
+    .midi-ref-vintage td { border: 1px solid rgba(120, 92, 44, 0.34); }
+
+    /* th.col-midi is spelled out because the older .col-midi rule sets a
+       vermillion that outranks the plain th selector. */
+    .midi-ref-vintage th,
+    .midi-ref-vintage th.col-midi {
+      color: #f0dcae;
+      background: linear-gradient(180deg, #5b4f2d 0%, #3a3220 100%);
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+    }
+
+    .midi-ref-vintage tr:nth-child(even) td { background: rgba(120, 92, 44, 0.07); }
+
+    /* Scoped to td: the same classes are on the header cells, which sit on
+       brass and must keep the pale engraved colour from the th rule. */
+    .midi-ref-vintage td.col-idx,
+    .midi-ref-vintage td.col-note {
+      color: #4a3a24;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .midi-ref-vintage td.col-midi {
+      color: var(--vermillion-deep);
+      font-family: var(--font-mono);
+    }
+
+    .midi-ref-vintage td.col-name {
+      color: #4a3a24;
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+
+    .midi-ref-vintage td.col-text { color: #201509; }
+
+    .midi-ref-vintage code {
+      padding: 1px 5px;
+      border-radius: 2px;
+      color: #3a2410;
+      background: rgba(120, 92, 44, 0.14);
+      box-shadow: inset 0 0 0 1px rgba(120, 92, 44, 0.32);
+      font: 600 11px/1.4 var(--font-mono);
+    }
+
+    .midi-ref-vintage .midi-ref-foot {
+      padding-top: 9px;
+      border-top: 1px dashed rgba(120, 92, 44, 0.6);
+      color: #59492f;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    /* Ten bays in one row need the full 1252px page, which needs 1296px of
+       viewport. Below that the deck stacks into rows, but the bays keep their
+       exact width and centre in the row rather than stretching, so the
+       rectangles stay identical. */
+    @media (max-width: 1295px) {
+      .voice-console { grid-template-columns: minmax(0, 1fr); }
+      /* Language keeps its place beside the portraits rather than taking a row
+         of its own, which would leave the deck half empty. */
+      .sinovox-discrete-grid {
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: center;
+        align-items: start;
+        gap: 14px;
+      }
+      .segmented-control { width: var(--bay-w); }
+      .voice-choice-grid,
+      .sinovox-pot-grid { justify-content: center; }
+      .voice-choice-grid { grid-template-columns: repeat(6, var(--bay-w)); }
+      .sinovox-pot-grid { grid-template-columns: repeat(3, var(--bay-w)); margin-top: 0; }
+    }
+
     @media (max-width: 820px) {
-      main { width: min(100%, 960px); border-radius: 0; }
-      .header-transport { display: none; }
+      main { width: min(100%, 960px); margin: 16px auto 24px; border-radius: 14px; }
+      /* The plates carry the connection lamps, so they stay at every width and
+         only tighten. */
+      .status-row { gap: 9px; }
+      .header-transport { gap: 6px; padding: 4px 7px; font-size: 10px; letter-spacing: 0.06em; }
+      .header-transport::before { width: 9px; height: 9px; }
+      .brand-vox { display: block; margin-left: 0; margin-top: 3px; }
       .connection-grid { grid-template-columns: 1fr; }
       .connection-grid button { width: auto; }
       .connection-unit + .connection-unit { border-left: 0; border-top: 1px solid var(--line); padding: 10px 0 0; }
@@ -1577,24 +3283,55 @@
       .speech-actions { grid-template-columns: 1fr 1fr; }
       .speech-actions button, .speech-actions #clearBtn { min-height: 48px; }
       .voice-console { grid-template-columns: 1fr; }
-      .sinovox-discrete-grid { display: grid; grid-template-columns: 1fr; }
-      .voice-choice-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .sinovox-pot-grid { grid-template-columns: repeat(3, 1fr); }
-      .tab-button { min-width: 0; flex: 1; padding-inline: 5px; font-size: 11px; }
+      .voice-choice-grid { grid-template-columns: repeat(3, var(--bay-w)); }
+      .pinyin-helper-grid { grid-template-columns: 1fr; }
+      .tab-button { min-width: 0; flex: 1; padding-inline: 5px; font-size: 12px; }
       .tab-button::before { margin-right: 4px; }
-      .pinyin-helper:not([open]) { right: 12px; }
+      .voice-console { padding: 14px 12px; }
+      .connection-unit + .connection-unit { border-left: 0; border-top: 1px solid rgba(120, 92, 48, 0.2); padding: 12px 0 0; }
+      .speech-actions #speakBtn, .speech-actions #clearBtn { min-height: 60px; }
     }
     @media (max-width: 560px) {
       main { width: 100%; max-width: 100vw; }
+      header { align-items: flex-start; flex-direction: column; }
       header, .panel, .tab-strip { max-width: 100vw; }
+      .status-row { justify-content: flex-start; width: 100%; }
+      button, select { width: 100%; }
       .connection-unit { grid-template-columns: minmax(0, 1fr); }
       .connection-unit .row { width: 100%; }
       .connection-grid button { width: 100%; }
-      .midi-settings-row { grid-template-columns: minmax(0, 1fr); }
-      .pinyin-helper:not([open]) { max-width: 150px; overflow: hidden; white-space: nowrap; }
+      /* One column at phone width: the channel drops below the port field
+         instead of beside it. */
+      .connection-unit .field:has(> .midi-settings-row) { grid-template-columns: minmax(0, 1fr); }
+      .midi-channel-field { grid-column: 1; grid-row: 2; }
+      .midi-settings-row > *, .midi-settings-row select { min-width: 0; width: 100%; }
       .voice-console, .sinovox-discrete-grid, .voice-control, .voice-choice-grid { width: 100%; min-width: 0; }
       .voice-choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .voice-choice { width: auto; }
+      .voice-choice { width: auto; min-width: 0; }
+      .pinyin-helper-heading { align-items: flex-start; flex-direction: column; }
+      .pinyin-helper-grid, .pinyin-step { min-width: 0; }
+      .slot-row { grid-template-columns: 1fr; }
+      .slot-actions { justify-content: flex-end; justify-self: end; }
+      /* The paper leaf and the reference sheet lose their inset at phone
+         width, where main itself is only 10px off the screen edge. */
+      .pinyin-helper.pinyin-page,
+      main .panel.midi-ref-vintage { margin-left: 10px; margin-right: 10px; }
+      .pinyin-page .pinyin-helper-body { padding: 12px 11px 13px; }
+      main { margin: 0 auto; padding: 10px 10px 14px; border-radius: 0; }
+      main::before { top: 10px; left: 10px; right: 10px; bottom: 14px; border-radius: 6px; }
+      header { border-radius: 6px 6px 0 0; }
+      .monitor-panel { border-radius: 0 0 6px 6px; }
+      .manual-link { width: 40px; }
+      /* Phone width: narrower bays and a smaller circle, so three knob bays and
+         a two-across portrait grid still fit at 320px. The knob, the arc and
+         the portraits all follow these two numbers. */
+      .voice-console { --bay-w: 74px; --disc-scale: 0.79; }
+      /* Too narrow for language and the portraits side by side. */
+      .sinovox-discrete-grid { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+      .voice-choice-grid { grid-template-columns: repeat(2, var(--bay-w)); }
+      .sinovox-pot-grid { grid-template-columns: repeat(3, var(--bay-w)); }
+      .voice-choice strong, .pot-label { font-size: 9px; letter-spacing: 0; }
+      .voice-choice span, .pot-value { font-size: 9px; letter-spacing: 0.02em; }
     }
   </style>
 </head>
