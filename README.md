@@ -4,6 +4,8 @@ Browser control surface for Kraftor Sinovox firmware. GUI v1.3 provides live
 Chinese/Pinyin or English speech over USB Serial, complete MIDI voice control,
 RAM/FRAM sentence editing and printable MIDI reference sheets.
 
+Run Sinovox Designer online: [https://deladriere.github.io/Sinovox_designer/](https://deladriere.github.io/Sinovox_designer/)
+
 ## Features
 
 - Speak ASCII Pinyin or English over USB Serial at 115200 baud.
